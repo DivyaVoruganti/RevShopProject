@@ -1,0 +1,104 @@
+package com.revshop.dao;
+import java.sql.*;
+import com.revshop.util.DBConnection;
+public class cartDAO {
+	 public void addToCart(int buyerId, int productId, int quantity) {
+
+	        String checkSql = "SELECT quantity FROM cart WHERE buyer_id=? AND product_id=?";
+	        String insertSql = "INSERT INTO cart(buyer_id, product_id, quantity) VALUES(?,?,?)";
+	        String updateSql = "UPDATE cart SET quantity = quantity + ? WHERE buyer_id=? AND product_id=?";
+
+	        try (Connection con = DBConnection.getConnection()) {
+
+	            PreparedStatement checkPs = con.prepareStatement(checkSql);
+	            checkPs.setInt(1, buyerId);
+	            checkPs.setInt(2, productId);
+
+	            ResultSet rs = checkPs.executeQuery();
+
+	            if (rs.next()) {
+	                PreparedStatement updatePs = con.prepareStatement(updateSql);
+	                updatePs.setInt(1, quantity);
+	                updatePs.setInt(2, buyerId);
+	                updatePs.setInt(3, productId);
+	                updatePs.executeUpdate();
+	            } else {
+	                PreparedStatement insertPs = con.prepareStatement(insertSql);
+	                insertPs.setInt(1, buyerId);
+	                insertPs.setInt(2, productId);
+	                insertPs.setInt(3, quantity);
+	                insertPs.executeUpdate();
+	            }
+
+	            System.out.println(" Product added to cart");
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public void viewCart(int buyerId) {
+
+	        String sql =
+	            "SELECT p.product_id, p.name, p.price, c.quantity"+
+	            "FROM cart c"+
+	            "JOIN products p ON c.product_id = p.product_id"+
+	            "WHERE c.buyer_id = ?";
+
+	        try (Connection con = DBConnection.getConnection();
+	             PreparedStatement ps = con.prepareStatement(sql)) {
+
+	            ps.setInt(1, buyerId);
+	            ResultSet rs = ps.executeQuery();
+
+	            System.out.println("ID | Name | Price | Qty | Total");
+	            boolean empty = true;
+
+	            while (rs.next()) {
+	                empty = false;
+	                double total = rs.getDouble("price") * rs.getInt("quantity");
+
+	                System.out.println(
+	                    rs.getInt("product_id") + " | " +
+	                    rs.getString("name") + " | " +
+	                    rs.getDouble("price") + " | " +
+	                    rs.getInt("quantity") + " | " +
+	                    total
+	                );
+	            }
+
+	            if (empty) {
+	                System.out.println(" Cart is empty");
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public void removeFromCart(int buyerId, int productId) {
+
+	        String sql = "DELETE FROM cart WHERE buyer_id=? AND product_id=?";
+
+	        try (Connection con = DBConnection.getConnection();
+	             PreparedStatement ps = con.prepareStatement(sql)) {
+
+	            ps.setInt(1, buyerId);
+	            ps.setInt(2, productId);
+
+	            int rows = ps.executeUpdate();
+
+	            if (rows > 0)
+	                System.out.println(" Product removed from cart");
+	            else
+	                System.out.println("Product not found in cart");
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	
+
+	
+	
+}

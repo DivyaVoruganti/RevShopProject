@@ -1,0 +1,12 @@
+import java.sql.Connection;
+
+public class Createdemo {
+
+	
+	public static void main(String[] args) {
+//	Class.forName("oracle.jdbc.driver.OracleDriver");
+//	
+
+	}
+
+}

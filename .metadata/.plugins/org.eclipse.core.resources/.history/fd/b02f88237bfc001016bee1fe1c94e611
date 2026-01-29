@@ -1,0 +1,45 @@
+package com.revshop.service;
+import java.sql.SQLException;
+import java.util.Scanner;
+import com.revshop.util.DBConnection;
+import com.revshop.dao.cartDAO;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+
+
+public class CheckoutService {
+	private cartDAO cartDao1 = new cartDAO(); // assuming you have this
+    private Scanner sc = new Scanner(System.in);
+    
+    public void clearCart(int userId) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        String sql = "DELETE FROM cart WHERE user_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+        
+        ps.executeUpdate();
+    }
+
+    public void checkout(int userId) throws SQLException {
+        System.out.println("\n===== CHECKOUT =====");
+
+        cartDao1.viewCart(userId);
+
+      
+        sc.nextLine(); 
+        System.out.print("Enter shipping address: ");
+        String shipping = sc.nextLine();
+        System.out.print("Enter billing address: ");
+        String billing = sc.nextLine();
+
+        
+        System.out.println("Order placed successfully!");
+        System.out.println("Shipping to: " + shipping);
+        System.out.println("Billing to: " + billing);
+
+        
+        cartDao1.clearCart(userId);
+        System.out.println("Cart cleared after checkout.");
+    }
+
+}

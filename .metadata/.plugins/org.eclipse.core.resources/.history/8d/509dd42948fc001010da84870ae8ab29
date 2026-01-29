@@ -1,0 +1,147 @@
+package com.revshop.main;
+
+import java.util.Scanner;
+import com.revshop.service.*;
+
+public class RevShopApp {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        UserService userService=new UserService();
+        ProductService productService=new ProductService();
+        CartService cartService = new CartService();
+
+        boolean isLoggedIn=false;
+        String loggedInRole = null;
+        int loggedInUserId = -1;   
+       
+        
+        
+        
+        while(true){
+        	if(!isLoggedIn){
+            System.out.println("===== REVSHOP =====");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            
+//            if ("BUYER".equalsIgnoreCase(loggedInRole)) {
+//                System.out.println("3. View Products");
+//               System.out.println("5. Search Product");
+//            }
+
+//            System.out.println("3. Exit");
+//            
+            System.out.println("3. View Products");
+            System.out.println("4. Exit");
+//            System.out.println("4. Exit");
+            System.out.print("Choice: ");
+            int choice=Integer.parseInt(sc.nextLine());
+
+            switch(choice){
+                case 1:
+                    System.out.print("Name: "); String name=sc.nextLine();
+                    System.out.print("Email: "); String email=sc.nextLine();
+                    System.out.print("Password: "); String pwd=sc.nextLine();
+                    System.out.print("Role (BUYER/SELLER): ");
+                    String role=sc.nextLine();
+                    
+                    if(userService.register(name,email,pwd,role))
+                        System.out.println("Registered Successfully!");
+                    else
+                        System.out.println("Registration Failed!");
+                    break;
+                case 2:
+                    System.out.print("Email: "); String le=sc.nextLine();
+                    System.out.print("Password: "); String lp=sc.nextLine();
+                    loggedInRole = userService.loginAndGetUserId(le, lp);
+                    loggedInRole = userService.loginAndGetRole(le, lp);
+                    if (loggedInUserId != -1) {
+                    	isLoggedIn = true;
+                        System.out.println("Login Successful as " + loggedInRole);
+                    } else {
+                        System.out.println("Invalid Credentials!");
+                    }
+                    break;
+                    
+//                    if(userService.login(le,lp))
+//                        System.out.println("Login Successful!");
+//                    else
+//                        System.out.println("Invalid Credentials!");
+//                    break;
+                case 3:
+                	if ("BUYER".equalsIgnoreCase(loggedInRole)) {
+                    productService.viewAllProducts();
+                    System.out.print("Enter keyword: ");
+                    String keyword = sc.nextLine();
+                    productService.searchByKeyword(keyword);
+                	 } else {
+                	        System.out.println("Access Denied! Buyers only.");
+                	    }
+                    break;
+                    
+                case 4:
+                    System.out.println("Thank you for using RevShop!"); 
+                    System.exit(0);
+            }
+        }
+//        	else if (role.equals("BUYER")) {
+        	 else if (isLoggedIn && "BUYER".equalsIgnoreCase(loggedInRole)) {
+        	
+                System.out.println("===== BUYER MENU =====");
+                System.out.println("1. View Products");
+                System.out.println("2. Search Products");
+//                System.out.println("3. Logout");
+                System.out.println("3. Add to Cart");
+                System.out.println("4. View Cart");
+                System.out.println("5. Remove from Cart");
+                System.out.println("6. Logout");
+                
+                System.out.print("Choice: ");
+
+                int c = sc.nextInt();
+                sc.nextLine();
+
+                switch (c) {
+                    case 1:
+                        productService.viewAllProducts();
+                        break;
+
+                    case 2:
+                        System.out.print("Enter keyword: ");
+                        String keyword = sc.nextLine();
+                        productService.searchProducts(keyword);
+                        break;
+
+                    case 3:
+                    	System.out.print("Enter Product ID: ");
+                        int pid = Integer.parseInt(sc.nextLine());
+
+                        System.out.print("Enter Quantity: ");
+                        int qty = Integer.parseInt(sc.nextLine());
+
+                        CartService.addProduct(loggedInUserId, pid, qty);
+                        break;
+                    case 4:
+                        CartService.viewCart(loggedInUserId);
+                        break;
+                    case 5:
+                        System.out.print("Enter Product ID to remove: ");
+                        int rid = Integer.parseInt(sc.nextLine());
+
+                        CartService.removeProduct(loggedInUserId, rid);
+                        break;
+                       
+                    case 6:
+                        isLoggedIn = false;
+                        loggedInUserId = -1;
+
+                        loggedInRole = null;
+                        System.out.println("Logged out successfully!");
+                        break;
+                }
+            }
+	
+    }
+    }
+}
+
+

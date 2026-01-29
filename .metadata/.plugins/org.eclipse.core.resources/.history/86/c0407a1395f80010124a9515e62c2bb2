@@ -1,0 +1,23 @@
+package com.revshop.dao;
+import java.sql.*;
+import com.revshop.util.DBConnection;
+public class ProductDAO {
+	public void viewProducts() {
+        try {
+            Connection con = DBConnection.getConnection();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM products");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " " +
+                    rs.getString("name") + " " +
+                    rs.getDouble("price")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}

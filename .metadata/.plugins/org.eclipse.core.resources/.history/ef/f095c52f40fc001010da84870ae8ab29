@@ -1,0 +1,18 @@
+package com.revshop.service;
+import com.revshop.dao.CartDAO;
+public class CartService {
+	private CartDAO cartDAO = new CartDAO();
+
+    public void addProduct(int buyerId, int productId, int qty) {
+        cartDAO.addToCart(buyerId, productId, qty);
+    }
+
+    public void viewCart(int buyerId) {
+        cartDAO.viewCart(buyerId);
+    }
+
+    public void removeProduct(int buyerId, int productId) {
+        cartDAO.removeFromCart(buyerId, productId);
+    }
+
+}

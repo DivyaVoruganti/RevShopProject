@@ -1,0 +1,55 @@
+package com.revshop.dao;
+
+import java.sql.*;
+import com.revshop.util.DBConnection;
+
+public class ProductDAO {
+
+    public void viewAllProducts() {
+        try {
+            Connection con=DBConnection.getConnection();
+            Statement st=con.createStatement();
+            ResultSet rs=st.executeQuery("SELECT * FROM products");
+            System.out.println("ID\tName\tPrice\tStock\tCategory");
+            while(rs.next()) {
+                System.out.println(rs.getInt("product_id")+"\t"+
+                                   rs.getString("name")+"\t"+
+                                   rs.getDouble("price")+"\t"+
+                                   rs.getInt("stock")+"\t"+
+                                   rs.getString("category"));
+            }
+            con.close();
+        } catch(Exception e){ e.printStackTrace(); }
+    }
+    public void searchProducts(String keyword) {
+        String sql = "SELECT * FROM products WHERE LOWER(name) LIKE LOWER(?)";
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+            while (rs.next()) {
+                found = true;
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getString("category") + " | " +
+                    rs.getDouble("price")
+                );
+            }
+
+            if (!found) {
+                System.out.println("No matching products found.");
+            }
+        
+        
+    }catch (Exception e) {
+            e.printStackTrace();
+    }
+    }
+
+
+

@@ -1,0 +1,30 @@
+import java.sql.Connection;
+import java.sql.DriverManager;   // Utility class to get DB connection
+import java.sql.ResultSet;       // Holds data returned from SELECT query
+import java.sql.SQLException;   // Handles DB-related errors
+import java.sql.Statement;   
+public class Createdemo {
+
+	
+	public static void main(String[] args) {
+		try{
+	Class.forName("oracle.jdbc.driver.OracleDriver");
+	Connection con = DriverManager.getConnection(
+       "jdbc:oracle:thin:@localhost:1521:XE","system","root");
+    Statement stmt = con.createStatement();
+//    stmt.execute("create table stu(sid int, sname varchar2(10),saddr varchar2(10))");
+    stmt.executeUpdate("insert into stu values(100,'divya','hyd')");
+    
+//    System.out.println("stu table created");
+    System.out.println("stu table values inserted");
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+}

@@ -1,0 +1,51 @@
+package com.revshop.main;
+
+import java.util.Scanner;
+import com.revshop.service.*;
+
+public class RevShopApp {
+	public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        UserService userService = new UserService();
+        ProductService productService = new ProductService();
+
+        while (true) {
+            System.out.println("===== REVSHOP =====");
+            System.out.println("1. Login");
+            System.out.println("2. View Products");
+            System.out.println("3. Exit");
+
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+            case 1:
+                System.out.print("Enter Email: ");
+                String email = sc.next();
+
+                System.out.print("Enter Password: ");
+                String password = sc.next();
+
+                if (userService.login(email, password)) {
+                    System.out.println("Login Successful!");
+                } else {
+                    System.out.println("Invalid Credentials!");
+                }
+                break;
+
+            case 2:
+                productService.viewAllProducts();
+                break;
+
+            case 3:
+                System.out.println("Thank you for using RevShop");
+                System.exit(0);
+            }
+        }
+    }
+
+	
+
+}

@@ -1,0 +1,93 @@
+package com.revshop.dao;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+
+public class FavoriteDAO {
+
+    // Add a product to favorites
+    public void addToFavorites(int userId, int productId) throws SQLException {
+        Connection con = DBConnection.getConnection();
+
+        // Check if already favorited
+        String checkSql = "SELECT favorite_id FROM favorites WHERE user_id = ? AND product_id = ?";
+        PreparedStatement checkPs = con.prepareStatement(checkSql);
+        checkPs.setInt(1, userId);
+        checkPs.setInt(2, productId);
+        ResultSet rs = checkPs.executeQuery();
+
+        if (rs.next()) {
+            System.out.println("Product is already in favorites.");
+        } else {
+            String insertSql = "INSERT INTO favorites (user_id, product_id) VALUES (?, ?)";
+            PreparedStatement ps = con.prepareStatement(insertSql);
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+            System.out.println("Product added to favorites.");
+        }
+        rs.close();
+        checkPs.close();
+        con.close();
+    }
+
+    // View all favorite products
+    public List<Product> viewFavorites(int userId) throws SQLException {
+        List<Product> favorites = new ArrayList<>();
+        Connection con = DBConnection.getConnection();
+
+        String sql = "SELECT p.product_id, p.name, p.price, p.category " +
+                     "FROM favorites f " +
+                     "JOIN products p ON f.product_id = p.product_id " +
+                     "WHERE f.user_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+
+        ResultSet rs = ps.executeQuery();
+        System.out.println("ID | Name | Price | Category");
+        while (rs.next()) {
+        	 int id = rs.getInt("product_id");
+             String name = rs.getString("name");
+             double price = rs.getDouble("price");
+             String category = rs.getString("category");
+             
+            System.out.println(id + " | " + name + " | " + price + " | " + category);
+            Product p = new Product(id, name, price, category);
+            favorites.add(p);
+            
+//            System.out.println(
+//                rs.getInt("product_id") + " | " +
+//                rs.getString("name") + " | " +
+//                rs.getDouble("price") + " | " +
+//                rs.getString("category")
+//            );
+        }
+
+        rs.close();
+        ps.close();
+        con.close();
+
+        return favorites;
+    }
+
+    // Remove a product from favorites
+    public void removeFromFavorites(int userId, int productId) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        String sql = "DELETE FROM favorites WHERE user_id = ? AND product_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+        ps.setInt(2, productId);
+        int rows = ps.executeUpdate();
+
+        if (rows > 0) {
+            System.out.println("Product removed from favorites.");
+        } else {
+            System.out.println("Product not found in favorites.");
+        }
+
+        ps.close();
+        con.close();
+    }
+}
