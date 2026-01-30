@@ -1,12 +1,12 @@
 package com.revshop.model;
 
 public class Seller {
-	 private int sellerId;           // seller's user_id reference
-	    private String businessName;    // Name of seller business
-	    private String email;           // Login email
-	    private String password;        // Password for login
+	 private int sellerId;           
+	    private String businessName;    
+	    private String email;           
+	    private String password;        
 
-	    // Constructor
+	   
 	    public Seller() { }
 
 	    public Seller(int sellerId, String businessName, String email, String password) {
@@ -16,7 +16,7 @@ public class Seller {
 	        this.password = password;
 	    }
 
-	    // Getters and Setters
+	   
 	    public int getSellerId() {
 	        return sellerId;
 	    }
@@ -49,8 +49,7 @@ public class Seller {
 	        this.password = password;
 	    }
 
-	    // ToString
-	    @Override
+	   
 	    public String toString() {
 	        return "Seller [sellerId=" + sellerId + ", businessName=" + businessName + ", email=" + email + "]";
 	    }

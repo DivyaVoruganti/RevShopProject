@@ -4,7 +4,9 @@ import com.revshop.dao.OrderDAO;
 
 public class OrderService {
 	private OrderDAO orderDao = new OrderDAO();
-
+	 public void viewOrdersBySeller(int sellerId) throws SQLException {
+	        orderDao.viewOrdersBySeller(sellerId);
+	    }
     public void viewOrderHistory(int userId) {
         try {
             orderDao.viewOrderHistory(userId);

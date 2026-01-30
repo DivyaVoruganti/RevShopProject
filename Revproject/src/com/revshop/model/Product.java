@@ -11,9 +11,35 @@ package com.revshop.model;
 	    private int stock;
 	    private String category;
 	    private String description;
+	    private double mrp;
+	    private double discountPrice;
+	    private int stockThreshold;
+
+	    public int getStockThreshold() {
+	        return stockThreshold;
+	    }
+
+	    public void setStockThreshold(int stockThreshold) {
+	        this.stockThreshold = stockThreshold;
+	    }
+
 
 	    
 	    public Product() {}
+	    public Product(int productId, String name, double price, String category) {
+	        this.productId = productId;
+	        this.name = name;
+	        this.price = price;
+	        this.category = category;
+	    }
+	    public Product(int productId, String name, double mrp, double discountPrice, int stock, String category) {
+	        this.productId = productId;
+	        this.name = name;
+	        this.mrp = mrp;
+	        this.discountPrice = discountPrice;
+	        this.stock = stock;
+	        this.category = category;
+	    }
 
 	    // Getters & Setters
 	    public int getProductId() {
@@ -63,6 +89,18 @@ package com.revshop.model;
 	    }
 	    public void setDescription(String description) {
 	        this.description = description;
+	    }
+	    public double getMrp() {
+	        return mrp;
+	    }
+	    public void setMrp(double mrp) {
+	        this.mrp = mrp;
+	    }
+	    public double getDiscountPrice() {
+	        return discountPrice;
+	    }
+	    public void setDiscountPrice(double discountPrice) {
+	        this.discountPrice = discountPrice;
 	    }
 	}
 

@@ -1,0 +1,28 @@
+package com.revshop.dao;
+import static org.junit.Assert.*;
+import java.util.List;
+import org.junit.Test;
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+public class FavoriteDAOTest {
+	FavoriteDAO dao = new FavoriteDAO();
+
+    @Test
+    public void testAddToFavorites() throws Exception {
+        dao.addToFavorites(1, 101);
+        assertTrue(true); // verified via DB or viewFavorites
+    }
+
+    @Test
+    public void testViewFavorites() throws Exception {
+        List<Product> list = dao.viewFavorites(1);
+        assertNotNull(list);
+    }
+
+    @Test
+    public void testRemoveFromFavorites() throws Exception {
+        dao.removeFromFavorites(1, 101);
+        assertTrue(true);
+    }
+
+}

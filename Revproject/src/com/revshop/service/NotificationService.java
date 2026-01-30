@@ -1,15 +1,67 @@
+
 package com.revshop.service;
-import java.sql.SQLException;
+
 import com.revshop.dao.NotificationDAO;
+import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import com.revshop.util.DBConnection;
+
+
 public class NotificationService {
-	 private NotificationDAO dao = new NotificationDAO();
 
-	    public void notifyOrderPlaced(int userId) throws SQLException {
-	        dao.addNotification(userId, "Your order has been placed successfully!");
-	    }
+    private NotificationDAO notificationDAO = new NotificationDAO();
+    
+    public void showNotifications(int userId) throws SQLException {
 
-	    public void showNotifications(int userId) throws SQLException {
-	        dao.viewNotifications(userId);
-	    }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
+        try {
+            con = DBConnection.getConnection();
+
+            String sql = "SELECT message, created_at FROM notifications WHERE user_id=? ORDER BY created_at DESC";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            rs = ps.executeQuery();
+
+            boolean found = false;
+            System.out.println("Notifications:");
+            while (rs.next()) {
+                found = true;
+                System.out.println(
+                    rs.getString("message") + " | " + rs.getDate("created_at")
+                );
+            }
+
+            if (!found) {
+                System.out.println("order placed successfully");
+            }
+
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        }
+    }
+
+    public void notifySeller(int sellerId, String message) throws SQLException {
+        notificationDAO.addNotification(sellerId, "SELLER", message);
+    }
+
+    public void notifyBuyer(int buyerId, String message) throws SQLException {
+        notificationDAO.addNotification(buyerId, "BUYER", message);
+    }
+
+    public void viewSellerNotifications(int sellerId) throws SQLException {
+        notificationDAO.viewNotifications(sellerId, "SELLER");
+    }
+
+    public void viewBuyerNotifications(int buyerId) throws SQLException {
+        notificationDAO.viewNotifications(buyerId, "BUYER");
+    }
 }

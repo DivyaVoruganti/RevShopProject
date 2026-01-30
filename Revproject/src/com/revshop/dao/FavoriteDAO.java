@@ -7,11 +7,11 @@ import com.revshop.util.DBConnection;
 
 public class FavoriteDAO {
 
-    // Add a product to favorites
+    
     public void addToFavorites(int userId, int productId) throws SQLException {
         Connection con = DBConnection.getConnection();
 
-        // Check if already favorited
+       
         String checkSql = "SELECT favorite_id FROM favorites WHERE user_id = ? AND product_id = ?";
         PreparedStatement checkPs = con.prepareStatement(checkSql);
         checkPs.setInt(1, userId);
@@ -33,7 +33,7 @@ public class FavoriteDAO {
         con.close();
     }
 
-    // View all favorite products
+   
     public List<Product> viewFavorites(int userId) throws SQLException {
         List<Product> favorites = new ArrayList<Product>();
         Connection con = DBConnection.getConnection();
@@ -57,13 +57,6 @@ public class FavoriteDAO {
             Product p = new Product(id, name, price, category);
             favorites.add(p);
             
-//            System.out.println(
-//                rs.getInt("product_id") + " | " +
-//                rs.getString("name") + " | " +
-//                rs.getDouble("price") + " | " +
-//                rs.getString("category")
-//            );
-            
         }
 
         rs.close();
@@ -73,7 +66,7 @@ public class FavoriteDAO {
         return favorites;
     }
 
-    // Remove a product from favorites
+   
     public void removeFromFavorites(int userId, int productId) throws SQLException {
         Connection con = DBConnection.getConnection();
         String sql = "DELETE FROM favorites WHERE user_id = ? AND product_id = ?";

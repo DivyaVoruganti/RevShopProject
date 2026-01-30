@@ -1,93 +1,95 @@
 package com.revshop.main;
+
 import java.sql.SQLException;
 import java.util.Scanner;
-import com.revshop.dao.SellerDAO;
 import com.revshop.service.*;
 
 public class RevShopApp {
-    public static void main(String[] args){
-        Scanner sc=new Scanner(System.in);
-        UserService userService=new UserService();
-        ProductService productService=new ProductService();
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        UserService userService = new UserService();
+        ProductService productService = new ProductService();
         CartService cartService = new CartService();
         FavoritesService favService = new FavoritesService();
         CheckoutService checkoutService = new CheckoutService();
         ReviewService reviewService = new ReviewService();
         PaymentService paymentService = new PaymentService();
         SellerService sellerService = new SellerService();
-   	 
+        OrderService orderService = new OrderService();
+        NotificationService notificationService = new NotificationService();
 
-
-
-        boolean isLoggedIn=false;
+        boolean isLoggedIn = false;
         String loggedInRole = null;
-        int loggedInUserId = -1;   
-       
-        
-        
-        
-        while(true){
-        	if(!isLoggedIn){
-            System.out.println("===== REVSHOP =====");
-            System.out.println("1. Register");
-            System.out.println("2. Login");
-                  
-            System.out.println("3. View Products");
-            System.out.println("4. Exit");
+        int loggedInUserId = -1;
 
-            System.out.print("Choice: ");
-            int choice=Integer.parseInt(sc.nextLine());
+        while (true) {
+            if (!isLoggedIn) {
+                System.out.println("===== REVSHOP =====");
+                System.out.println("1. Register");
+                System.out.println("2. Login");
+                System.out.println("3. View Products");
+                System.out.println("4. Exit");
 
-            switch(choice){
-                case 1:
-                    System.out.print("Name: "); String name=sc.nextLine();
-                    System.out.print("Email: "); String email=sc.nextLine();
-                    System.out.print("Password: "); String pwd=sc.nextLine();
-                    System.out.print("Role (BUYER/SELLER): ");
-                    String role=sc.nextLine();
-                    
-                    if(userService.register(name,email,pwd,role))
-                        System.out.println("Registered Successfully!");
-                    else
-                        System.out.println("Registration Failed!");
-                    break;
-                case 2:
-                    System.out.print("Email: "); String le=sc.nextLine();
-                    System.out.print("Password: "); String lp=sc.nextLine();
-                    loggedInUserId = userService.loginAndGetUserId(le, lp);
-                    loggedInRole = userService.loginAndGetRole(le, lp);
-                    if (loggedInUserId != -1) {
-                    	isLoggedIn = true;
-                        System.out.println("Login Successful as " + loggedInRole);
-                    } else {
-                        System.out.println("Invalid Credentials!");
-                    }
-                    break;
-                    
+                System.out.print("Choice: ");
+                int choice = Integer.parseInt(sc.nextLine());
 
-                case 3:
-                	if ("BUYER".equalsIgnoreCase(loggedInRole)) {
-                    productService.viewAllProducts();
-                    System.out.print("Enter keyword: ");
-                    String keyword = sc.nextLine();
-                    productService.searchByKeyword(keyword);
-                	 } else {
-                	        System.out.println("Access Denied! Buyers only.");
-                	    }
-                    break;
-                    
-                case 4:
-                    System.out.println("Thank you for using RevShop!"); 
-                    System.exit(0);
-            }
-        }
+                switch (choice) {
+                    case 1:
+                        System.out.print("Name: ");
+                        String name = sc.nextLine();
+                        System.out.print("Email: ");
+                        String email = sc.nextLine();
+                        System.out.print("Password: ");
+                        String pwd = sc.nextLine();
+                        System.out.print("Role (BUYER/SELLER): ");
+                        String role = sc.nextLine();
 
-        	 else if (isLoggedIn && "BUYER".equalsIgnoreCase(loggedInRole)) {
-        	
+                        if (userService.register(name, email, pwd, role))
+                            System.out.println("Registered Successfully!");
+                        else
+                            System.out.println("Registration Failed!");
+                        break;
+
+                    case 2:
+                        System.out.print("Email: ");
+                        String le = sc.nextLine();
+                        System.out.print("Password: ");
+                        String lp = sc.nextLine();
+                        loggedInUserId = userService.loginAndGetUserId(le, lp);
+                        loggedInRole = userService.loginAndGetRole(le, lp);
+
+                        if (loggedInUserId != -1) {
+                            isLoggedIn = true;
+                            System.out.println("Login Successful as " + loggedInRole);
+                        } else {
+                            System.out.println("Invalid Credentials!");
+                        }
+                        break;
+
+                    case 3:
+                        if ("BUYER".equalsIgnoreCase(loggedInRole)) {
+                            try {
+                                productService.viewAllProducts();
+                                System.out.print("Enter keyword: ");
+                                String keyword = sc.nextLine();
+                                productService.searchProducts(keyword);
+                            } catch (SQLException e) {
+                                System.out.println("Error fetching products: " + e.getMessage());
+                            }
+                        } else {
+                            System.out.println("Access Denied! Buyers only.");
+                        }
+                        break;
+
+                    case 4:
+                        System.out.println("Thank you for using RevShop!");
+                        System.exit(0);
+                }
+            } 
+            else if (isLoggedIn && "BUYER".equalsIgnoreCase(loggedInRole)) {
                 System.out.println("===== BUYER MENU =====");
                 System.out.println("1. View Products");
                 System.out.println("2. Search Products");
-
                 System.out.println("3. Add to Cart");
                 System.out.println("4. View Cart");
                 System.out.println("5. Remove from Cart");
@@ -99,217 +101,73 @@ public class RevShopApp {
                 System.out.println("11. View Product Reviews");
                 System.out.println("12. Make Payment");
                 System.out.println("13. Logout");
-                
-                
-                System.out.print("Choice: ");
 
-                int c = sc.nextInt();
-                sc.nextLine();
+                System.out.print("Choice: ");
+                int c = Integer.parseInt(sc.nextLine());
 
                 switch (c) {
                     case 1:
-                        productService.viewAllProducts();
+                        try { productService.viewAllProducts(); }
+                        catch (SQLException e) { System.out.println("Error loading products: " + e.getMessage()); }
                         break;
-
                     case 2:
                         System.out.print("Enter keyword: ");
                         String keyword = sc.nextLine();
-                        productService.searchProducts(keyword);
+                        try { productService.searchProducts(keyword); }
+                        catch (SQLException e) { System.out.println("Error searching products: " + e.getMessage()); }
                         break;
-
                     case 3:
-                    	System.out.print("Enter Product ID: ");
-                        int pid = Integer.parseInt(sc.nextLine());
-
-                        System.out.print("Enter Quantity: ");
-                        int qty = Integer.parseInt(sc.nextLine());
-
-                        cartService.addProduct(loggedInUserId, pid, qty);
+                        try {
+                            System.out.print("Product ID: ");
+                            int pid = Integer.parseInt(sc.nextLine());
+                            System.out.print("Quantity: ");
+                            int qty = Integer.parseInt(sc.nextLine());
+                            cartService.addProductWithStockCheck(loggedInUserId, pid, qty);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Enter numeric values for Product ID and Quantity!");
+                        }
                         break;
-                    case 4:
-                        cartService.viewCart(loggedInUserId);
-                        break;
+                    case 4: cartService.viewCart(loggedInUserId); break;
                     case 5:
-                        System.out.print("Enter Product ID to remove: ");
-                        int rid = Integer.parseInt(sc.nextLine());
-
-                        cartService.removeProduct(loggedInUserId, rid);
+                        try {
+                            System.out.print("Product ID to remove: ");
+                            int rid = Integer.parseInt(sc.nextLine());
+                            cartService.removeProduct(loggedInUserId, rid);
+                        } catch (NumberFormatException e) { System.out.println("Enter numeric Product ID!"); }
                         break;
                     case 6:
-                    	sc.nextLine();
-                    	 try {
-                    	 checkoutService.checkout(loggedInUserId);
-                    	 }catch (SQLException e) {
-                    	        System.out.println("Error during checkout: " + e.getMessage());
-                    	        e.printStackTrace();
-                    	    }
-                         break;
+                        checkoutService.checkout(loggedInUserId); break;
                     case 7:
-                    	try{
-                        favService.favoritesMenu(loggedInUserId);  
-                        }catch (SQLException e) {
-                            System.out.println("Error in favorites menu: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    	break;
+                        try { favService.favoritesMenu(loggedInUserId); }
+                        catch (SQLException e) { System.out.println("Error in favorites menu: " + e.getMessage()); }
+                        break;
                     case 8:
-                        try {
-                            new NotificationService().showNotifications(loggedInUserId);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+                        try { notificationService.showNotifications(loggedInUserId); }
+                        catch (SQLException e) { System.out.println("Error showing notifications: " + e.getMessage()); }
                         break;
-                    case 9:
-                        OrderService orderService = new OrderService();
-                        orderService.viewOrderHistory(loggedInUserId);
-                        break;
+                    case 9: orderService.viewOrderHistory(loggedInUserId); break;
                     case 10:
-                    	try {
-                            reviewService.reviewProduct(loggedInUserId);
-                        } catch (SQLException e) {
-                            System.out.println("Error submitting review: " + e.getMessage());
-                            e.printStackTrace();
-                        }
+                        try { reviewService.reviewProduct(loggedInUserId); }
+                        catch (SQLException e) { System.out.println("Error submitting review: " + e.getMessage()); }
                         break;
-
-
                     case 11:
-                    	 try {
-                    	        reviewService.viewReviews();
-                    	    } catch (SQLException e) {
-                    	        System.out.println("Error viewing reviews: " + e.getMessage());
-                    	        e.printStackTrace();
-                    	    }
-                    	    break;
+                        try { reviewService.viewReviews(); }
+                        catch (SQLException e) { System.out.println("Error viewing reviews: " + e.getMessage()); }
+                        break;
                     case 12:
-                        try {
-                            paymentService.makePayment(loggedInUserId);
-                        } catch (SQLException e) {
-                            System.out.println("Payment failed: " + e.getMessage());
-                            e.printStackTrace();
-                        }
+                        try { paymentService.makePayment(loggedInUserId); }
+                        catch (SQLException e) { System.out.println("Payment failed: " + e.getMessage()); }
                         break;
-
-                       
-
-   
-	
-                       
                     case 13:
-                        isLoggedIn = false;
-                        loggedInUserId = -1;
-
-                        loggedInRole = null;
-                        System.out.println("Logged out successfully!");
-                        break;
+                        isLoggedIn = false; loggedInUserId = -1; loggedInRole = null;
+                        System.out.println("Logged out successfully!"); break;
+                    default: System.out.println("Invalid choice!"); break;
                 }
+            } 
+            else if (isLoggedIn && "SELLER".equalsIgnoreCase(loggedInRole)) {
+                // Just call SellerService menu; it handles all exceptions internally
+                sellerService.sellerMenu(loggedInUserId, sc);
             }
-        	 else if (isLoggedIn && "SELLER".equalsIgnoreCase(loggedInRole)) {
-        		    
-
-        		    sellerService.sellerMenu(loggedInUserId); 
-        		    System.out.println("===== SELLER MENU =====");
-        		    System.out.println("1. View All Products");
-        		    System.out.println("2. Add New Product");
-        		    System.out.println("3. Update Product");
-        		    System.out.println("4. Delete Product");
-        		    System.out.println("5. Logout");
-
-        		    System.out.print("Choice: ");
-        		    int c = Integer.parseInt(sc.nextLine());
-        		    switch (c) {
-
-        		   
-        		    case 1:
-        		        sellerService.viewSellerProducts(loggedInUserId);
-        		        break;
-
-        		   
-        		    case 2:
-        		        System.out.print("Enter Product Name: ");
-        		        String name = sc.nextLine();
-
-        		        System.out.print("Enter Price: ");
-        		        double price = Double.parseDouble(sc.nextLine());
-
-        		        System.out.print("Enter Stock Quantity: ");
-        		        int stock = Integer.parseInt(sc.nextLine());
-
-        		        System.out.print("Enter Category: ");
-        		        String category = sc.nextLine();
-
-        		        System.out.print("Enter Description: ");
-        		        String desc = sc.nextLine();
-
-        		        sellerService.addProduct(
-        		                loggedInUserId,
-        		                name,
-        		                price,
-        		                stock,
-        		                category,
-        		                desc
-        		        );
-        		        break;
-
-        		    
-        		    case 3:
-        		        System.out.print("Enter Product ID to update: ");
-        		        int pid = Integer.parseInt(sc.nextLine());
-
-        		        System.out.print("Enter New Name: ");
-        		        String newName = sc.nextLine();
-
-        		        System.out.print("Enter New Price: ");
-        		        double newPrice = Double.parseDouble(sc.nextLine());
-
-        		        System.out.print("Enter New Stock Quantity: ");
-        		        int newStock = Integer.parseInt(sc.nextLine());
-
-        		        System.out.print("Enter New Category: ");
-        		        String newCategory = sc.nextLine();
-
-        		        System.out.print("Enter New Description: ");
-        		        String newDesc = sc.nextLine();
-
-        		        sellerService.updateProduct(
-        		                pid,
-        		                loggedInUserId,
-        		                newName,
-        		                newPrice,
-        		                newStock,
-        		                newCategory,
-        		                newDesc
-        		        );
-        		        break;
-
-        		  
-        		    case 4:
-        		        System.out.print("Enter Product ID to delete: ");
-        		        int delId = Integer.parseInt(sc.nextLine());
-
-        		        sellerService.deleteProduct(delId, loggedInUserId);
-        		        break;
-
-        		   
-        		    case 5:
-        		        isLoggedIn = false;
-        		        loggedInUserId = -1;
-        		        loggedInRole = null;
-        		        System.out.println("Logged out successfully!");
-        		        break;
-
-        		    default:
-        		        System.out.println("Invalid choice.");
-        		}
-
-
-        		  
-        		}
-
-        	
-	
-    }
+        }
     }
 }
-
-

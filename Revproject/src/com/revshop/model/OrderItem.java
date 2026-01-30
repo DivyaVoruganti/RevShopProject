@@ -1,13 +1,13 @@
 package com.revshop.model;
 
 public class OrderItem {
-	private int orderItemId;   // unique ID for order item
-    private int orderId;       // reference to Order
-    private int productId;     // product included in the order
-    private int quantity;      // number of units purchased
-    private double price;      // price per unit or total price
+	private int orderItemId;  
+    private int orderId;       
+    private int productId;     
+    private int quantity;      
+    private double price;      
 
-    // Constructor
+    
     public OrderItem() { }
 
     public OrderItem(int orderItemId, int orderId, int productId, int quantity, double price) {
@@ -18,7 +18,7 @@ public class OrderItem {
         this.price = price;
     }
 
-    // Getters and Setters
+   
     public int getOrderItemId() {
         return orderItemId;
     }
@@ -59,8 +59,7 @@ public class OrderItem {
         this.price = price;
     }
 
-    // ToString
-    @Override
+    
     public String toString() {
         return "OrderItem [orderItemId=" + orderItemId + ", orderId=" + orderId + 
                ", productId=" + productId + ", quantity=" + quantity + ", price=" + price + "]";

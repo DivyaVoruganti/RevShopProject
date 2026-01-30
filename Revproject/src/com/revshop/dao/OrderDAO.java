@@ -55,5 +55,69 @@ public class OrderDAO {
 	        rs.close();
 	        ps.close();
 	    }
+	    public void viewOrdersBySeller(int sellerId) throws SQLException {
+
+	        Connection con = DBConnection.getConnection();
+
+	        /* ---------- STEP 1: Check if seller has added any products ---------- */
+	        String productCheckSql =
+	            "SELECT COUNT(*) FROM products WHERE seller_id = ?";
+
+	        PreparedStatement ps1 = con.prepareStatement(productCheckSql);
+	        ps1.setInt(1, sellerId);
+
+	        ResultSet rs1 = ps1.executeQuery();
+	        rs1.next();
+	        int productCount = rs1.getInt(1);
+
+	        rs1.close();
+	        ps1.close();
+
+	        if (productCount == 0) {
+	            System.out.println("You have not added any products yet.");
+	            con.close();
+	            return;
+	        }
+
+	      
+	        String sql =
+	            "SELECT o.order_id, o.order_date, p.name, oi.quantity, oi.price " +
+	            "FROM orders o " +
+	            "JOIN order_items oi ON o.order_id = oi.order_id " +
+	            "JOIN products p ON oi.product_id = p.product_id " +
+	            "WHERE p.seller_id = ? " +
+	            "ORDER BY o.order_id";
+
+	        PreparedStatement ps2 = con.prepareStatement(sql);
+	        ps2.setInt(1, sellerId);
+
+	        ResultSet rs2 = ps2.executeQuery();
+
+	        boolean foundOrders = false;
+
+	        System.out.println("OrderID | Date | Product | Qty | Price");
+
+	        while (rs2.next()) {
+	            foundOrders = true;
+	            System.out.println(
+	                rs2.getInt("order_id") + " | " +
+	                rs2.getDate("order_date") + " | " +
+	                rs2.getString("name") + " | " +
+	                rs2.getInt("quantity") + " | " +
+	                rs2.getDouble("price")
+	            );
+	        }
+
+	        if (!foundOrders) {
+	            System.out.println("Your products have not received any orders yet.");
+	        }
+
+	        rs2.close();
+	        ps2.close();
+	        con.close();
+	    }
+
+	   
+
 
 }

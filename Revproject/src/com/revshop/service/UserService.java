@@ -1,8 +1,10 @@
 package com.revshop.service;
 import java.sql.ResultSet;
-
 import com.revshop.dao.UserDAO;
-
+import com.revshop.util.DBConnection; 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 public class UserService {
 
     UserDAO userDAO = new UserDAO();
@@ -11,9 +13,6 @@ public class UserService {
         return userDAO.register(name, email, password, role);
     }
 
-//    public boolean login(String email, String password) {
-//        return userDAO.login(email, password);
-//    }
 
     public boolean changePassword(String email, String newPwd) {
         return userDAO.changePassword(email, newPwd);
@@ -21,29 +20,90 @@ public class UserService {
         public String login(String email, String password) {
             return userDAO.loginAndGetRole(email, password);
         }
-        public int loginAndGetUserId(String email, String password) {
-            try {
-                ResultSet rs = userDAO.loginAndGetUser(email, password);
-                if (rs != null && rs.next()) {
-                    return rs.getInt("user_id");
+     
+
+            public int loginAndGetUserId(String email, String password) {
+                int userId = -1;
+                Connection con = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+
+                try {
+                    con = DBConnection.getConnection();
+                    ps = con.prepareStatement("SELECT user_id FROM users WHERE email=? AND password=?");
+                    ps.setString(1, email);
+                    ps.setString(2, password);
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        userId = rs.getInt("user_id");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+                    try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+                    try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
+                return userId;
             }
-            return -1;
+
+            public String loginAndGetRole(String email, String password) {
+                String role = null;
+                Connection con = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+
+                try {
+                    con = DBConnection.getConnection();
+                    ps = con.prepareStatement("SELECT role FROM users WHERE email=? AND password=?");
+                    ps.setString(1, email);
+                    ps.setString(2, password);
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        role = rs.getString("role");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+                    try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+                    try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+                }
+
+                return role;
+            }
+            
+            public String getRoleByUserId(int userId) {
+                String role = null;
+                Connection con = null;
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+
+                try {
+                    con = DBConnection.getConnection();
+                    ps = con.prepareStatement("SELECT role FROM users WHERE user_id=?");
+                    ps.setInt(1, userId);
+                    rs = ps.executeQuery();
+                    if (rs.next()) {
+                        role = rs.getString("role");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+                    try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+                    try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+                }
+
+                return role;
+            }
+
         }
 
-        public String loginAndGetRole(String email, String password) {
-            try {
-                ResultSet rs = userDAO.loginAndGetUser(email, password);
-                if (rs != null && rs.next()) {
-                    return rs.getString("role");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+
+       
+
 
     
-}
+

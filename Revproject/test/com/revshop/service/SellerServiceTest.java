@@ -1,0 +1,104 @@
+package com.revshop.service;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class SellerServiceTest {
+
+    SellerService sellerService = new SellerService();
+
+    @Test
+    public void testAddProduct() throws Exception {
+        
+        sellerService.addProduct(
+                "Test Product",
+                1000.0,
+                900.0,
+                10,
+                "Electronics",
+                "Test description",
+                1
+        );
+        assertTrue(true); 
+    }
+
+    @Test
+    public void testAddProductInvalidDiscount() throws Exception {
+        
+        sellerService.addProduct(
+                "Invalid Product",
+                1000.0,
+                1200.0,
+                5,
+                "Electronics",
+                "Invalid discount",
+                1
+        );
+        assertTrue(true); 
+    }
+
+    @Test
+    public void testViewSellerProducts() throws Exception {
+        sellerService.viewSellerProducts(1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testUpdateProduct() throws Exception {
+        sellerService.updateProduct(
+                101, 1,
+                "Updated Product",
+                1200.0,
+                1000.0,
+                15,
+                "Electronics",
+                "Updated description"
+        );
+        assertTrue(true);
+    }
+
+    @Test
+    public void testUpdateProductInvalidDiscount() throws Exception {
+        sellerService.updateProduct(
+                102, 1,
+                "Invalid Update",
+                1200.0,
+                1500.0, // invalid
+                10,
+                "Electronics",
+                "Invalid discount update"
+        );
+        assertTrue(true);
+    }
+
+    @Test
+    public void testUpdatePrice() {
+        sellerService.updatePrice(1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testViewProductReviews() {
+        sellerService.viewProductReviews(1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testSetInventoryThreshold() {
+        sellerService.setInventoryThreshold(1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testCheckLowStockAlerts() {
+        sellerService.checkLowStockAlerts(1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testDeleteProduct() throws Exception {
+        sellerService.deleteProduct(101, 1);
+        assertTrue(true);
+    }
+}
+

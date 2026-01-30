@@ -91,5 +91,35 @@ public ResultSet loginAndGetUser(String email, String password) {
     }
     return null;
 }
+public String getRoleByUserId(int userId) {
+
+    String role = null;
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    String sql = "SELECT role FROM users WHERE user_id=?";
+
+    try {
+        con = DBConnection.getConnection();
+        ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            role = rs.getString("role");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try { if (rs != null) rs.close(); } catch (SQLException e) {}
+        try { if (ps != null) ps.close(); } catch (SQLException e) {}
+        try { if (con != null) con.close(); } catch (SQLException e) {}
+    }
+
+    return role;
+}
+
 
 }

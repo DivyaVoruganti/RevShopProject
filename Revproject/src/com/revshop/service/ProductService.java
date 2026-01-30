@@ -1,5 +1,6 @@
 package com.revshop.service;
 
+import java.sql.SQLException;
 import com.revshop.dao.ProductDAO;
 
 public class ProductService {
@@ -7,16 +8,21 @@ public class ProductService {
     private ProductDAO productDAO;
 
     public ProductService() {
-        productDAO = new ProductDAO();
+        this.productDAO = new ProductDAO();
     }
 
-    public void viewAllProducts() {
+    
+    public void viewAllProducts(int sellerId) throws SQLException {
+        productDAO.getProductsBySeller(sellerId);
+    }
+
+    
+    public void viewAllProducts() throws SQLException {
         productDAO.viewAllProducts();
     }
-    public void searchByKeyword(String keyword) {
-        productDAO.searchProducts(keyword);
-    }
-    public void searchProducts(String keyword) {
-        productDAO.searchProducts(keyword);
+
+   
+    public void searchProducts(String keyword) throws SQLException {
+        productDAO.searchByKeyword(keyword);
     }
 }

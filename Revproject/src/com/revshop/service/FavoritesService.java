@@ -6,7 +6,7 @@ public class FavoritesService {
 	 private FavoriteDAO dao = new FavoriteDAO();
 	    private Scanner sc = new Scanner(System.in);
 
-	    // Favorites submenu
+	  
 	    public void favoritesMenu(int userId) throws SQLException {
 	        while (true) {
 	            System.out.println("\n===== FAVORITES MENU =====");
@@ -32,7 +32,7 @@ public class FavoritesService {
 	                    dao.removeFromFavorites(userId, removeId);
 	                    break;
 	                case 4:
-	                    return; // back to buyer menu
+	                    return; 
 	                default:
 	                    System.out.println("Invalid choice. Try again.");
 	            }

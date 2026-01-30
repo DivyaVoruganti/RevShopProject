@@ -49,14 +49,14 @@ public class SellerDAO {
 	   
 	    public void updateProduct(Product p) throws SQLException {
 	        Connection con = DBConnection.getConnection();
-	        String sql = "UPDATE products SET name=?, price=?, stock=?, category=?, description=? WHERE p_id=?";
+	        String sql = "UPDATE products SET name=?, price=?, stock=?, category=?, description=? WHERE product_id=?";
 	        PreparedStatement ps = con.prepareStatement(sql);
 	        ps.setString(1, p.getName());
 	        ps.setDouble(2, p.getPrice());
 	        ps.setInt(3, p.getStock());
 	        ps.setString(4, p.getCategory());
 	        ps.setString(5, p.getDescription());
-	        ps.setInt(6, p.getId());
+	        ps.setInt(6, p.getProductId());
 
 	        int rows = ps.executeUpdate();
 	        if(rows > 0)
