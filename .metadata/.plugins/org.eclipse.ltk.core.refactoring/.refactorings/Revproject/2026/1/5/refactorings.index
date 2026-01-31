@@ -11,3 +11,10 @@
 1769845600516	Rename type 'ReviewServiceTest'
 1769845634905	Rename type 'SellerServiceTest'
 1769845664173	Rename type 'UserServiceTest'
+1769869044315	Delete element
+1769869400643	Delete element
+1769881579507	Rename compilation unit 'cartDAO.java'
+1769882967185	Rename compilation unit 'CartDAO.java'
+1769883855395	Delete element
+1769884885108	Delete element
+1769885102166	Rename resource 'lo4j.properties'

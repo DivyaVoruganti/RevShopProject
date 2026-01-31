@@ -1,0 +1,250 @@
+package com.revshop.dao;
+
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class ProductDAO {
+
+    private static final Logger logger =
+            Logger.getLogger(ProductDAO.class);
+
+    // ================= VIEW ALL PRODUCTS =================
+    public void viewAllProducts() {
+
+        String sql =
+                "SELECT product_id, name, price, discount_price, stock, category " +
+                "FROM products";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getDouble("price") + " | " +
+                        rs.getDouble("discount_price") + " | " +
+                        rs.getInt("stock") + " | " +
+                        rs.getString("category")
+                );
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching products", e);
+        }
+    }
+
+    // ================= SELLER PRODUCTS =================
+    public void getProductsBySeller(int sellerId) {
+
+        String sql =
+                "SELECT product_id, name FROM products WHERE seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getInt("product_id") + " | " +
+                            rs.getString("name")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching seller products", e);
+        }
+    }
+
+    // ================= ADD PRODUCT =================
+    public void addProduct(Product p) {
+
+        String sql =
+                "INSERT INTO products (name, price, discount_price, stock, category, description, seller_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getMrp());
+            ps.setDouble(3, p.getDiscountPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getCategory());
+            ps.setString(6, p.getDescription());
+            ps.setInt(7, p.getSellerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error adding product", e);
+        }
+    }
+
+    // ================= UPDATE PRODUCT =================
+    public void updateProduct(Product p) {
+
+        String sql =
+                "UPDATE products SET name=?, price=?, discount_price=?, stock=?, category=?, description=? " +
+                "WHERE product_id=? AND seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getMrp());
+            ps.setDouble(3, p.getDiscountPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getCategory());
+            ps.setString(6, p.getDescription());
+            ps.setInt(7, p.getProductId());
+            ps.setInt(8, p.getSellerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error updating product", e);
+        }
+    }
+
+    // ================= UPDATE PRICE =================
+    public void updateProductPrice(Product p) {
+
+        String sql =
+                "UPDATE products SET price=?, discount_price=? " +
+                "WHERE product_id=? AND seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setDouble(1, p.getMrp());
+            ps.setDouble(2, p.getDiscountPrice());
+            ps.setInt(3, p.getProductId());
+            ps.setInt(4, p.getSellerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error updating price", e);
+        }
+    }
+
+    // ================= DELETE PRODUCT =================
+    public void deleteProduct(int productId, int sellerId) {
+
+        String sql =
+                "DELETE FROM products WHERE product_id=? AND seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, productId);
+            ps.setInt(2, sellerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error deleting product", e);
+        }
+    }
+
+    // ================= STOCK =================
+    public int getAvailableStock(int productId) {
+
+        String sql = "SELECT stock FROM products WHERE product_id=?";
+        int stock = -1;
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) stock = rs.getInt("stock");
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching stock", e);
+        }
+        return stock;
+    }
+
+    // ================= INVENTORY THRESHOLD =================
+    public void updateStockThreshold(int productId, int sellerId, int threshold) {
+
+        String sql =
+                "UPDATE products SET stock_threshold=? WHERE product_id=? AND seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, threshold);
+            ps.setInt(2, productId);
+            ps.setInt(3, sellerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error updating threshold", e);
+        }
+    }
+
+    // ================= LOW STOCK =================
+    public void checkLowStock(int sellerId) {
+
+        String sql =
+                "SELECT product_id, name, stock FROM products " +
+                "WHERE seller_id=? AND stock <= stock_threshold";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getInt("product_id") + " | " +
+                            rs.getString("name") + " | STOCK=" +
+                            rs.getInt("stock")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error checking low stock", e);
+        }
+    }
+
+    // ================= REVIEWS =================
+    public void viewProductReviewsBySeller(int sellerId) {
+
+        String sql =
+                "SELECT r.review_text, r.rating, p.name " +
+                "FROM reviews r JOIN products p ON r.product_id=p.product_id " +
+                "WHERE p.seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getString("name") + " | " +
+                            rs.getInt("rating") + " | " +
+                            rs.getString("review_text")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching reviews", e);
+        }
+    }
+}

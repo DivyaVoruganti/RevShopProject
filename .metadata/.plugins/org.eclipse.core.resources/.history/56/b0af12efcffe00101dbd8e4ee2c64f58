@@ -1,0 +1,54 @@
+package com.revshop.dao;
+
+import com.revshop.util.DBConnection;
+import org.apache.log4j.Logger;
+
+import java.sql.*;
+
+public class ProductDAO {
+
+    private static final Logger logger =
+            Logger.getLogger(ProductDAO.class);
+
+    // VIEW ALL PRODUCTS
+    public void viewAllProducts() {
+        String sql = "SELECT * FROM products";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getDouble("price") + " | Stock: " +
+                        rs.getInt("stock")
+                );
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching products", e);
+        }
+    }
+
+    // STOCK CHECK (THIS WAS MISSING)
+    public int getAvailableStock(int productId) {
+        String sql = "SELECT stock FROM products WHERE product_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("stock");
+            }
+
+        } catch (SQLException e) {
+            logger.error("Stock check failed", e);
+        }
+        return 0;
+    }
+}

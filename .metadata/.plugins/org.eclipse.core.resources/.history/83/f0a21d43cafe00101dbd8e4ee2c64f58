@@ -1,0 +1,67 @@
+package com.revshop.main;
+
+import java.util.Scanner;
+
+import com.revshop.service.SellerService;
+import com.revshop.service.UserService;
+
+public class RevShopApp {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        UserService userService = new UserService();
+        SellerService sellerService = new SellerService();
+
+        boolean exit = false;
+
+        while (!exit) {
+
+            System.out.println("\n===== REVSHOP =====");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
+            System.out.print("Choice: ");
+
+            int choice;
+            try {
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (Exception e) {
+                System.out.println("Enter valid number.");
+                continue;
+            }
+
+            switch (choice) {
+
+                case 1:
+                    userService.register(sc);
+                    break;
+
+                case 2:
+                    int userId = userService.login(sc);
+
+                    if (userId != -1) {
+                        String role = userService.getRoleByUserId(userId);
+
+                        if ("SELLER".equalsIgnoreCase(role)) {
+                            // Seller menu returns true when logout
+                            sellerService.sellerMenu(userId, sc);
+                        } else {
+                            System.out.println("Customer login successful (menu pending)");
+                        }
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Thank you for using RevShop!");
+                    exit = true;
+                    break;
+
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+
+        sc.close();
+    }
+}

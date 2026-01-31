@@ -1,19 +1,21 @@
-
 package com.revshop.service;
 
-import com.revshop.dao.NotificationDAO;
-import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.revshop.util.DBConnection;
 
+import org.apache.log4j.Logger;
+
+import com.revshop.dao.NotificationDAO;
+import com.revshop.util.DBConnection;
 
 public class NotificationService {
 
+    private static final Logger logger = Logger.getLogger(NotificationService.class);
+
     private NotificationDAO notificationDAO = new NotificationDAO();
-    
+
     public void showNotifications(int userId) throws SQLException {
 
         Connection con = null;
@@ -23,45 +25,61 @@ public class NotificationService {
         try {
             con = DBConnection.getConnection();
 
-            String sql = "SELECT message, created_at FROM notifications WHERE user_id=? ORDER BY created_at DESC";
+            String sql =
+                    "SELECT message, created_at FROM notifications " +
+                    "WHERE user_id=? ORDER BY created_at DESC";
+
             ps = con.prepareStatement(sql);
             ps.setInt(1, userId);
-
             rs = ps.executeQuery();
 
             boolean found = false;
-            System.out.println("Notifications:");
+            logger.info("Fetching notifications for userId: " + userId);
+
             while (rs.next()) {
                 found = true;
-                System.out.println(
-                    rs.getString("message") + " | " + rs.getDate("created_at")
+                logger.info(
+                        rs.getString("message") +
+                        " | " +
+                        rs.getDate("created_at")
                 );
             }
 
             if (!found) {
-                System.out.println("order placed successfully");
+                logger.info("No notifications found for userId: " + userId);
             }
 
+        } catch (SQLException e) {
+            logger.error("Error while fetching notifications for userId: " + userId, e);
+            throw e;
         } finally {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (con != null) con.close();
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB resources in showNotifications", e);
+            }
         }
     }
 
     public void notifySeller(int sellerId, String message) throws SQLException {
         notificationDAO.addNotification(sellerId, "SELLER", message);
+        logger.info("Notification sent to sellerId: " + sellerId + ", Message: " + message);
     }
 
     public void notifyBuyer(int buyerId, String message) throws SQLException {
         notificationDAO.addNotification(buyerId, "BUYER", message);
+        logger.info("Notification sent to buyerId: " + buyerId + ", Message: " + message);
     }
 
     public void viewSellerNotifications(int sellerId) throws SQLException {
+        logger.info("Viewing seller notifications for sellerId: " + sellerId);
         notificationDAO.viewNotifications(sellerId, "SELLER");
     }
 
     public void viewBuyerNotifications(int buyerId) throws SQLException {
+        logger.info("Viewing buyer notifications for buyerId: " + buyerId);
         notificationDAO.viewNotifications(buyerId, "BUYER");
     }
 }

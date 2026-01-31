@@ -1,0 +1,18 @@
+package com.revshop.service;
+
+import java.sql.SQLException;
+
+public class ProductDAO {
+
+    // Stub: add product
+    public void addProduct(String name, double mrp, double discountPrice, int stock, String category, String description, int sellerId) throws SQLException {
+        // You can implement database insert later
+        System.out.println("Stub: addProduct called for " + name);
+    }
+
+    // Stub: view products by seller
+    public void viewProductsBySeller(int sellerId) throws SQLException {
+        // You can implement database query later
+        System.out.println("Stub: viewProductsBySeller called for sellerId " + sellerId);
+    }
+}

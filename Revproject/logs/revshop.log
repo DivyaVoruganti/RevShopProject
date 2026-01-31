@@ -1,0 +1,57 @@
+2026-02-01 00:15:49 INFO  UserService:54 - UserId fetched for email: sreeja@gmail.com, UserId: 1
+2026-02-01 00:15:49 INFO  UserService:93 - Role fetched for email: sreeja@gmail.com, Role: seller
+2026-02-01 00:17:49 INFO  UserService:54 - UserId fetched for email: divya@gmail.com, UserId: 0
+2026-02-01 00:17:49 INFO  UserService:93 - Role fetched for email: divya@gmail.com, Role: buyer
+2026-02-01 00:18:03 INFO  ReviewService:19 - Waiting for product ID for review. UserId: 0
+2026-02-01 00:23:21 INFO  ReviewService:19 - Waiting for product ID for review. UserId: 0
+2026-02-01 00:45:56 INFO  CartService:45 - Product added to cart. UserId: 1, ProductId: 101
+2026-02-01 00:46:23 INFO  CheckoutService:57 - Checkout started for userId: 1
+2026-02-01 00:47:00 INFO  CheckoutService:57 - Checkout started for userId: 1
+2026-02-01 00:47:23 INFO  NotificationService:68 - Notification sent to sellerId: 10, Message: New order received
+2026-02-01 00:47:23 INFO  NotificationService:73 - Notification sent to buyerId: 20, Message: Order placed successfully
+2026-02-01 00:47:23 INFO  NotificationService:77 - Viewing seller notifications for sellerId: 15
+2026-02-01 00:47:23 INFO  NotificationService:82 - Viewing buyer notifications for buyerId: 25
+2026-02-01 00:47:39 INFO  OrderService:22 - Fetching order history for userId: 303
+2026-02-01 00:47:39 ERROR OrderService:25 - Error fetching order history for userId: 303
+java.sql.SQLException: DB Error
+	at com.revshop.service.OrderService.viewOrderHistory(OrderService.java:23)
+	at com.revshop.service.OrderValidations.testViewOrderHistory_ExceptionHandled(OrderValidations.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.runners.BlockJUnit4ClassRunner.runNotIgnored(BlockJUnit4ClassRunner.java:79)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:71)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:49)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:193)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:42)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:236)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+2026-02-01 00:47:39 INFO  OrderService:22 - Fetching order history for userId: 202
+2026-02-01 00:47:39 INFO  OrderService:16 - Fetching orders for sellerId: 101
+2026-02-01 00:47:58 WARN  PaymentService:22 - No orders found for payment. UserId: 1
+2026-02-01 00:48:16 INFO  ProductService:30 - Searching products with keyword: mobile
+2026-02-01 00:48:16 INFO  ProductService:25 - Viewing all products
+2026-02-01 00:48:16 INFO  ProductService:20 - Viewing products for sellerId: 101
+2026-02-01 00:48:35 INFO  ReviewService:19 - Waiting for product ID for review. UserId: 2
+2026-02-01 00:50:56 INFO  ProductService:25 - Viewing all products
+2026-02-01 00:51:06 INFO  CheckoutService:57 - Checkout started for userId: 0
+2026-02-01 00:51:14 INFO  CheckoutService:63 - Waiting for shipping address input
+2026-02-01 00:51:16 INFO  CheckoutService:66 - Waiting for billing address input
+2026-02-01 00:51:18 WARN  CheckoutService:72 - Cart is empty. Checkout aborted for userId: 0
+2026-02-01 00:51:34 INFO  CartService:45 - Product added to cart. UserId: 0, ProductId: 102
+2026-02-01 00:51:39 INFO  CartService:65 - UserId: 0, ProductId: 102, Quantity: 2, Price: 20000.0, Total: 40000.0
+2026-02-01 00:51:48 INFO  ReviewService:19 - Waiting for product ID for review. UserId: 0

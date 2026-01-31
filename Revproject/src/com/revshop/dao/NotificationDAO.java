@@ -59,11 +59,6 @@ public class NotificationDAO {
 	    if (!found) {
 	        System.out.println("order placed by user.");
 	    }
-	
-
-
-	
-
         rs.close();
         ps.close();
         con.close();

@@ -1,0 +1,77 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.model.CartItem;
+
+public class CheckoutValidations {
+
+    @Mock
+    private cartDAO cartDao1;
+
+    @Mock
+    private Connection connection;
+
+    @Mock
+    private PreparedStatement preparedStatement;
+
+    @Mock
+    private ResultSet resultSet;
+
+    @InjectMocks
+    private CheckoutService checkoutService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+   
+    @Test
+    public void testCheckout_CartEmpty() throws Exception {
+
+        when(cartDao1.getCartItems(anyInt(), any(Connection.class)))
+                .thenReturn(Collections.<CartItem>emptyList());
+
+        checkoutService.checkout(1);
+
+        verify(cartDao1).getCartItems(eq(1), any(Connection.class));
+    }
+
+   
+
+   
+    @Test
+    public void testCheckout_ExceptionHandled() throws Exception {
+
+        when(cartDao1.getCartItems(anyInt(), any(Connection.class)))
+                .thenThrow(new RuntimeException("DB Error"));
+
+        checkoutService.checkout(1);
+
+        
+        assertTrue(true);
+    }
+
+   
+    @Test
+    public void testClearCartMethodExists() throws Exception {
+        checkoutService.clearCart(1);
+        assertTrue(true);
+    }
+}

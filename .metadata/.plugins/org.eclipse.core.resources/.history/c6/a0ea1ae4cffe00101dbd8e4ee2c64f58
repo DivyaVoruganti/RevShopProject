@@ -1,0 +1,47 @@
+package com.revshop.dao;
+
+import com.revshop.model.CartItem;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CartDAO {
+
+    public void addToCart(int userId, int productId, int quantity) {
+        String sql = "INSERT INTO cart(user_id, product_id, quantity) VALUES (?,?,?)";
+
+        try (Connection con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:xe", "system", "oracle");
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ps.setInt(3, quantity);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<CartItem> getCartItems(int userId, Connection con)
+            throws SQLException {
+
+        List<CartItem> list = new ArrayList<>();
+        String sql = "SELECT * FROM cart WHERE user_id=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            CartItem item = new CartItem();
+            item.setProductId(rs.getInt("product_id"));
+            item.setQuantity(rs.getInt("quantity"));
+            list.add(item);
+        }
+
+        return list;
+    }
+}

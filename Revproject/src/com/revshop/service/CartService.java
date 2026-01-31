@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.revshop.dao.cartDAO;
 import com.revshop.dao.ProductDAO;
 import com.revshop.model.CartItem;
@@ -13,96 +15,104 @@ import com.revshop.util.DBConnection;
 
 public class CartService {
 
+    private static final Logger logger = Logger.getLogger(CartService.class);
+
     private cartDAO cartDAO = new cartDAO();
     private ProductDAO productDAO = new ProductDAO();
     private NotificationService notificationService = new NotificationService();
 
-    // ================= ADD TO CART WITH STOCK CHECK =================
     public boolean addProductWithStockCheck(int userId, int productId, int quantity) {
-        // Since getAvailableStock handles SQLException internally, no try-catch here
+
         int availableStock = productDAO.getAvailableStock(productId);
 
-        if (availableStock == -1) { // indicates error
-            System.out.println("Error checking stock!");
+        if (availableStock == -1) {
+            logger.error("Error checking stock for productId: " + productId);
             return false;
         }
 
         if (availableStock <= 0) {
-            System.out.println("Product is out of stock!");
+            logger.warn("Product out of stock. ProductId: " + productId);
             return false;
         }
 
         if (quantity > availableStock) {
-            System.out.println("Only " + availableStock + " items available. Try again.");
+            logger.warn("Requested quantity exceeds stock. ProductId: " + productId +
+                        ", Available: " + availableStock);
             return false;
         }
 
-        // cartDAO.addToCart does NOT throw SQLException, so no try-catch needed
         cartDAO.addToCart(userId, productId, quantity);
-        System.out.println("Product added to cart!");
+        logger.info("Product added to cart. UserId: " + userId + ", ProductId: " + productId);
         return true;
     }
 
-    // ================= VIEW CART =================
     public void viewCart(int userId) {
+
         Connection con = null;
         try {
-            con = DBConnection.getConnection(); // can throw SQLException
-            List<CartItem> cartItems = cartDAO.getCartItems(userId, con); // can throw SQLException
+            con = DBConnection.getConnection();
+            List<CartItem> cartItems = cartDAO.getCartItems(userId, con);
 
             if (cartItems.isEmpty()) {
-                System.out.println("Your cart is empty!");
+                logger.info("Cart is empty for UserId: " + userId);
                 return;
             }
 
-            System.out.println("ProductID | Quantity | Price | Total");
-
             for (CartItem item : cartItems) {
-                double price = getProductPrice(item.getProductId(), con); // can throw SQLException
+                double price = getProductPrice(item.getProductId(), con);
                 double total = price * item.getQuantity();
-                System.out.println(item.getProductId() + " | " +
-                        item.getQuantity() + " | " +
-                        price + " | " +
-                        total);
+
+                logger.info("UserId: " + userId +
+                            ", ProductId: " + item.getProductId() +
+                            ", Quantity: " + item.getQuantity() +
+                            ", Price: " + price +
+                            ", Total: " + total);
             }
 
-        } catch (SQLException e) { // valid catch
-            System.out.println("Error fetching cart: " + e.getMessage());
-            e.printStackTrace();
+        } catch (SQLException e) {
+            logger.error("Error fetching cart for UserId: " + userId, e);
         } finally {
-            try { if (con != null) con.close(); } catch (SQLException e) {}
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection", e);
+            }
         }
     }
 
-    // ================= REMOVE PRODUCT FROM CART =================
     public void removeProduct(int userId, int productId) {
-        cartDAO.removeFromCart(userId, productId); // does NOT throw SQLException
+        cartDAO.removeFromCart(userId, productId);
+        logger.info("Product removed from cart. UserId: " + userId + ", ProductId: " + productId);
     }
 
-    // ================= PLACE ORDER =================
     public void placeOrder(int buyerId) {
+
         Connection con = null;
         try {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
 
             String orderSql = "INSERT INTO orders (user_id, order_date) VALUES (?, SYSDATE)";
-            PreparedStatement orderPs = con.prepareStatement(orderSql, new String[]{"order_id"});
+            PreparedStatement orderPs = con.prepareStatement(orderSql, new String[] { "order_id" });
             orderPs.setInt(1, buyerId);
             orderPs.executeUpdate();
 
             ResultSet rs = orderPs.getGeneratedKeys();
             int orderId = 0;
-            if (rs.next()) orderId = rs.getInt(1);
-
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
             rs.close();
             orderPs.close();
 
-            List<CartItem> cartItems = cartDAO.getCartItems(buyerId, con); // can throw SQLException
+            List<CartItem> cartItems = cartDAO.getCartItems(buyerId, con);
 
             for (CartItem item : cartItems) {
+
                 double price = getProductPrice(item.getProductId(), con);
-                String itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+
+                String itemSql =
+                        "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
                 PreparedStatement itemPs = con.prepareStatement(itemSql);
                 itemPs.setInt(1, orderId);
                 itemPs.setInt(2, item.getProductId());
@@ -112,56 +122,82 @@ public class CartService {
                 itemPs.close();
 
                 int sellerId = getSellerIdByProduct(item.getProductId(), con);
-                notificationService.notifySeller(sellerId, "New order received for product ID: " + item.getProductId());
+                notificationService.notifySeller(
+                        sellerId,
+                        "New order received for product ID: " + item.getProductId()
+                );
             }
 
             notificationService.notifyBuyer(buyerId, "Your order has been placed successfully");
             cartDAO.clearCart(buyerId, con);
+
             con.commit();
+            logger.info("Order placed successfully. OrderId: " + orderId + ", BuyerId: " + buyerId);
 
-            System.out.println("Order placed successfully!");
-
-        } catch (SQLException e) { // valid catch
-            try { if (con != null) con.rollback(); } catch (SQLException ex) {}
-            System.out.println("Error placing order: " + e.getMessage());
-            e.printStackTrace();
+        } catch (SQLException e) {
+            try {
+                if (con != null) con.rollback();
+            } catch (SQLException ex) {
+                logger.error("Rollback failed", ex);
+            }
+            logger.error("Error placing order for BuyerId: " + buyerId, e);
         } finally {
-            try { if (con != null) con.close(); } catch (SQLException e) {}
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection", e);
+            }
         }
     }
 
-    // ================= FETCH PRODUCT PRICE =================
     private double getProductPrice(int productId, Connection con) throws SQLException {
+
         PreparedStatement ps = null;
         ResultSet rs = null;
         double price = 0;
+
         try {
             String sql = "SELECT price FROM products WHERE product_id=?";
             ps = con.prepareStatement(sql);
             ps.setInt(1, productId);
             rs = ps.executeQuery();
-            if (rs.next()) price = rs.getDouble("price");
+
+            if (rs.next()) {
+                price = rs.getDouble("price");
+            }
         } finally {
-            try { if (rs != null) rs.close(); } catch (SQLException e) {}
-            try { if (ps != null) ps.close(); } catch (SQLException e) {}
+            try { if (rs != null) rs.close(); } catch (SQLException e) {
+                logger.error("Error closing ResultSet", e);
+            }
+            try { if (ps != null) ps.close(); } catch (SQLException e) {
+                logger.error("Error closing PreparedStatement", e);
+            }
         }
         return price;
     }
 
-    // ================= FETCH SELLER ID =================
     private int getSellerIdByProduct(int productId, Connection con) throws SQLException {
+
         PreparedStatement ps = null;
         ResultSet rs = null;
         int sellerId = 0;
+
         try {
             String sql = "SELECT seller_id FROM products WHERE product_id=?";
             ps = con.prepareStatement(sql);
             ps.setInt(1, productId);
             rs = ps.executeQuery();
-            if (rs.next()) sellerId = rs.getInt("seller_id");
+
+            if (rs.next()) {
+                sellerId = rs.getInt("seller_id");
+            }
         } finally {
-            try { if (rs != null) rs.close(); } catch (SQLException e) {}
-            try { if (ps != null) ps.close(); } catch (SQLException e) {}
+            try { if (rs != null) rs.close(); } catch (SQLException e) {
+                logger.error("Error closing ResultSet", e);
+            }
+            try { if (ps != null) ps.close(); } catch (SQLException e) {
+                logger.error("Error closing PreparedStatement", e);
+            }
         }
         return sellerId;
     }

@@ -1,0 +1,43 @@
+package com.revshop.service;
+
+import com.revshop.dao.UserDAO;
+import com.revshop.model.User;
+
+import java.util.Scanner;
+
+public class UserService {
+
+    private UserDAO dao = new UserDAO();
+
+    public void register(Scanner sc) {
+        User user = new User();
+
+        System.out.print("Name: ");
+        user.setName(sc.nextLine());
+
+        System.out.print("Email: ");
+        user.setEmail(sc.nextLine());
+
+        System.out.print("Password: ");
+        user.setPassword(sc.nextLine());
+
+        System.out.print("Role (SELLER/CUSTOMER): ");
+        user.setRole(sc.nextLine());
+
+        dao.register(user);
+    }
+
+    public int login(Scanner sc) {
+        System.out.print("Email: ");
+        String email = sc.nextLine();
+
+        System.out.print("Password: ");
+        String pwd = sc.nextLine();
+
+        return dao.login(email, pwd);
+    }
+
+    public String getRoleByUserId(int userId) {
+        return dao.getRoleByUserId(userId);
+    }
+}

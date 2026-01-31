@@ -1,0 +1,244 @@
+package com.revshop.dao;
+
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+import java.sql.*;
+
+public class ProductDAO {
+
+    // ================= VIEW ALL PRODUCTS =================
+    public void viewAllProducts() {
+        String sql = "SELECT product_id, name, price, discount_price, stock, category FROM products";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching products: " + e.getMessage());
+        }
+    }
+
+    // ================= SEARCH PRODUCTS =================
+    public void searchByKeyword(String keyword) {
+        String sql = "SELECT product_id, name, price, discount_price, stock, category " +
+                     "FROM products WHERE LOWER(name) LIKE ? OR LOWER(category) LIKE ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String value = "%" + keyword.toLowerCase() + "%";
+            ps.setString(1, value);
+            ps.setString(2, value);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                System.out.println("ID | Name | MRP | Discount | Stock | Category");
+                while (rs.next()) {
+                    System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getDouble("price") + " | " +
+                        rs.getDouble("discount_price") + " | " +
+                        rs.getInt("stock") + " | " +
+                        rs.getString("category")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error searching products: " + e.getMessage());
+        }
+    }
+
+    // ================= ADD PRODUCT =================
+    public void addProduct(Product product) {
+        String sql = "INSERT INTO products (product_id, name, price, discount_price, stock, category, description, seller_id) " +
+                     "VALUES (product_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getMrp());
+            ps.setDouble(3, product.getDiscountPrice());
+            ps.setInt(4, product.getStock());
+            ps.setString(5, product.getCategory());
+            ps.setString(6, product.getDescription());
+            ps.setInt(7, product.getSellerId());
+
+            ps.executeUpdate();
+            System.out.println("Product added successfully!");
+
+        } catch (SQLException e) {
+            System.out.println("Error adding product: " + e.getMessage());
+        }
+    }
+
+    // ================= GET PRODUCTS BY SELLER =================
+    public void getProductsBySeller(int sellerId) {
+        String sql = "SELECT product_id, name, price, discount_price, stock, category FROM products WHERE seller_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                System.out.println("ID | Name | MRP | Discount | Stock | Category");
+                boolean hasProducts = false;
+                while (rs.next()) {
+                    hasProducts = true;
+                    System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getDouble("price") + " | " +
+                        rs.getDouble("discount_price") + " | " +
+                        rs.getInt("stock") + " | " +
+                        rs.getString("category")
+                    );
+                }
+                if (!hasProducts) System.out.println("No products found for your account.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching seller products: " + e.getMessage());
+        }
+    }
+
+    // ================= DELETE PRODUCT =================
+    public void deleteProduct(int productId, int sellerId) {
+        String sql = "DELETE FROM products WHERE product_id=? AND seller_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ps.setInt(2, sellerId);
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product deleted!" : "Delete failed!");
+
+        } catch (SQLException e) {
+            System.out.println("Error deleting product: " + e.getMessage());
+        }
+    }
+
+    // ================= UPDATE PRODUCT =================
+    public void updateProduct(Product product) {
+        String sql = "UPDATE products SET name=?, price=?, discount_price=?, stock=?, category=?, description=? " +
+                     "WHERE product_id=? AND seller_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getMrp());
+            ps.setDouble(3, product.getDiscountPrice());
+            ps.setInt(4, product.getStock());
+            ps.setString(5, product.getCategory());
+            ps.setString(6, product.getDescription());
+            ps.setInt(7, product.getProductId());
+            ps.setInt(8, product.getSellerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating product: " + e.getMessage());
+        }
+    }
+
+    // ================= UPDATE PRODUCT PRICE =================
+    public void updateProductPrice(Product product) {
+        String sql = "UPDATE products SET price=?, discount_price=? WHERE product_id=? AND seller_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setDouble(1, product.getMrp());
+            ps.setDouble(2, product.getDiscountPrice());
+            ps.setInt(3, product.getProductId());
+            ps.setInt(4, product.getSellerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating price: " + e.getMessage());
+        }
+    }
+
+    // ================= VIEW PRODUCT REVIEWS =================
+    public void viewProductReviewsBySeller(int sellerId) {
+        String sql = "SELECT p.name AS product_name, r.rating, r.comment " +
+                     "FROM reviews r " +
+                     "JOIN products p ON r.product_id = p.product_id " +
+                     "WHERE p.seller_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                System.out.println("Product Name | Rating | Comment");
+                boolean hasReviews = false;
+                while (rs.next()) {
+                    hasReviews = true;
+                    System.out.println(
+                        rs.getString("product_name") + " | " +
+                        rs.getInt("rating") + " | " +
+                        rs.getString("comment")
+                    );
+                }
+                if (!hasReviews) System.out.println("No reviews found for your products.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching product reviews: " + e.getMessage());
+        }
+    }
+
+    // ================= UPDATE STOCK THRESHOLD =================
+    public void updateStockThreshold(int productId, int sellerId, int threshold) {
+        String sql = "UPDATE products SET stock_threshold=? WHERE product_id=? AND seller_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, threshold);
+            ps.setInt(2, productId);
+            ps.setInt(3, sellerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating stock threshold: " + e.getMessage());
+        }
+    }
+
+    // ================= LOW STOCK CHECK =================
+    public void checkLowStock(int sellerId) {
+        String sql = "SELECT product_id, name, stock, stock_threshold FROM products WHERE seller_id=? AND stock <= stock_threshold";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                System.out.println("LOW STOCK ALERTS");
+                System.out.println("ProductID | Name | Stock | Threshold");
+                boolean alertFound = false;
+                while (rs.next()) {
+                    alertFound = true;
+                    System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getInt("stock") + " | " +
+                        rs.getInt("stock_threshold")
+                    );
+                }
+                if (!alertFound) System.out.println("All products are sufficiently stocked");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error checking low stock: " + e.getMessage());
+        }
+    }
+}

@@ -1,0 +1,95 @@
+package com.revshop.service;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+import org.apache.log4j.Logger;
+
+public class SellerService {
+
+    private static final Logger logger = Logger.getLogger(SellerService.class);
+
+    private ProductDAO productDAO = new ProductDAO();
+    private UserDAO userDAO = new UserDAO();
+
+    public void addProduct(String name, double mrp, double discountPrice,
+                           int stock, String category, String description, int sellerId) {
+
+        logger.info("Add product requested by sellerId: " + sellerId);
+
+        if (!isSeller(sellerId)) {
+            logger.warn("Unauthorized addProduct attempt by userId: " + sellerId);
+            System.out.println("Error: Only sellers can add products.");
+            return;
+        }
+
+        if (discountPrice > mrp) {
+            logger.warn("Invalid pricing by sellerId: " + sellerId);
+            System.out.println("Error: Discount price cannot be greater than MRP.");
+            return;
+        }
+
+        try {
+            productDAO.addProduct(name, mrp, discountPrice, stock, category, description, sellerId);
+            System.out.println("Product added successfully!");
+            logger.info("Product added successfully by sellerId: " + sellerId);
+        } catch (SQLException e) {
+            System.out.println("Error adding product: " + e.getMessage());
+            logger.error("Error adding product by sellerId: " + sellerId, e);
+        }
+    }
+
+    private boolean isSeller(int userId) {
+        String role = userDAO.getRoleByUserId(userId);
+        return "SELLER".equalsIgnoreCase(role);
+    }
+
+    public void sellerMenu(int sellerId, Scanner sc) {
+        while (true) {
+            System.out.println("===== SELLER MENU =====");
+            System.out.println("1. View My Products");
+            System.out.println("2. Add Product");
+            System.out.println("3. Update Product");
+            System.out.println("4. Update Price");
+            System.out.println("5. View Product Reviews");
+            System.out.println("6. Set Inventory Threshold");
+            System.out.println("7. Check Low Stock Alerts");
+            System.out.println("8. Delete Product");
+            System.out.println("9. Logout");
+
+            System.out.print("Choice: ");
+            int choice = -1;
+            try {
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Enter numeric values only!");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    try { productDAO.viewProductsBySeller(sellerId); }
+                    catch (SQLException e) { System.out.println("Error fetching products: " + e.getMessage()); }
+                    break;
+                case 2:
+                    try {
+                        System.out.print("Name: "); String name = sc.nextLine();
+                        System.out.print("MRP: "); double mrp = Double.parseDouble(sc.nextLine());
+                        System.out.print("Discount Price: "); double discount = Double.parseDouble(sc.nextLine());
+                        System.out.print("Stock: "); int stock = Integer.parseInt(sc.nextLine());
+                        System.out.print("Category: "); String category = sc.nextLine();
+                        System.out.print("Description: "); String desc = sc.nextLine();
+                        addProduct(name, mrp, discount, stock, category, desc, sellerId);
+                    } catch (NumberFormatException e) { System.out.println("Invalid numeric input!"); }
+                    break;
+                case 3: System.out.println("Update Product coming soon."); break;
+                case 4: System.out.println("Update Price coming soon."); break;
+                case 5: System.out.println("View Product Reviews coming soon."); break;
+                case 6: System.out.println("Set Inventory Threshold coming soon."); break;
+                case 7: System.out.println("Check Low Stock Alerts coming soon."); break;
+                case 8: System.out.println("Delete Product coming soon."); break;
+                case 9: System.out.println("Logging out..."); return;
+                default: System.out.println("Invalid choice!"); break;
+            }
+        }
+    }
+}

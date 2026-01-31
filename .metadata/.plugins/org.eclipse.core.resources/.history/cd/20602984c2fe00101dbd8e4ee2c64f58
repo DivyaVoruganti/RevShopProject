@@ -1,0 +1,229 @@
+package com.revshop.main;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+import com.revshop.service.*;
+import org.apache.log4j.Logger;
+
+public class RevShopApp {
+
+    private static final Logger logger = Logger.getLogger(RevShopApp.class);
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        UserService userService = new UserService();
+        ProductService productService = new ProductService();
+        CartService cartService = new CartService();
+        FavoritesService favService = new FavoritesService();
+        CheckoutService checkoutService = new CheckoutService();
+        ReviewService reviewService = new ReviewService();
+        PaymentService paymentService = new PaymentService();
+        SellerService sellerService = new SellerService();
+        OrderService orderService = new OrderService();
+        NotificationService notificationService = new NotificationService();
+
+        boolean isLoggedIn = false;
+        String loggedInRole = null;
+        int loggedInUserId = -1;
+
+        while (true) {
+            try {
+                // ================= MAIN MENU =================
+                if (!isLoggedIn) {
+                    System.out.println("===== REVSHOP =====");
+                    System.out.println("1. Register");
+                    System.out.println("2. Login");
+                    System.out.println("3. View Products");
+                    System.out.println("4. Exit");
+
+                    System.out.print("Choice: ");
+                    int choice = Integer.parseInt(sc.nextLine());
+
+                    switch (choice) {
+                        case 1:
+                            System.out.print("Name: ");
+                            String name = sc.nextLine();
+                            if (name.matches(".*@.*")) {
+                                logger.warn("Invalid name during registration: " + name);
+                                System.out.println("Error: Name cannot contain '@' or look like an email!");
+                                break;
+                            }
+
+                            System.out.print("Email: ");
+                            String email = sc.nextLine();
+                            if (!email.matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+                                logger.warn("Invalid email during registration: " + email);
+                                System.out.println("Error: Email must be a valid @gmail.com address!");
+                                break;
+                            }
+
+                            System.out.print("Password: ");
+                            String pwd = sc.nextLine();
+                            if (!pwd.matches("^(?=.*[A-Za-z])(?=(?:.*\\d){3,}).+$")) {
+                                logger.warn("Weak password during registration for email: " + email);
+                                System.out.println("Error: Password must contain at least 3 numbers and alphabets!");
+                                break;
+                            }
+
+                            System.out.print("Role (BUYER/SELLER): ");
+                            String role = sc.nextLine();
+
+                            if (userService.register(name, email, pwd, role.toUpperCase())) {
+                                logger.info("User registered: " + email + ", role=" + role.toUpperCase());
+                                System.out.println("Registered Successfully!");
+                            } else {
+                                logger.warn("Registration failed for email: " + email);
+                                System.out.println("Registration Failed!");
+                            }
+                            break;
+
+                        case 2:
+                            System.out.print("Email: ");
+                            String le = sc.nextLine();
+                            System.out.print("Password: ");
+                            String lp = sc.nextLine();
+
+                            loggedInUserId = userService.loginAndGetUserId(le, lp);
+                            loggedInRole = userService.loginAndGetRole(le, lp);
+
+                            if (loggedInUserId != -1) {
+                                isLoggedIn = true;
+                                logger.info("User logged in: " + le + ", role=" + loggedInRole);
+                                System.out.println("Login Successful as " + loggedInRole);
+                            } else {
+                                logger.warn("Failed login attempt for email: " + le);
+                                System.out.println("Invalid Credentials!");
+                            }
+                            break;
+
+                        case 3:
+                            try {
+                                productService.viewAllProducts();
+                                System.out.print("Enter keyword: ");
+                                String keyword = sc.nextLine();
+                                productService.searchProducts(keyword);
+                            } catch (SQLException e) {
+                                logger.error("Error fetching products", e);
+                                System.out.println("Error fetching products: " + e.getMessage());
+                            }
+                            break;
+
+                        case 4:
+                            logger.info("Application exited by user");
+                            System.out.println("Thank you for using RevShop!");
+                            System.exit(0);
+
+                        default:
+                            System.out.println("Invalid choice!");
+                            logger.warn("Invalid main menu choice: " + choice);
+                            break;
+                    }
+                } 
+                // ================= BUYER MENU =================
+                else if (isLoggedIn && "BUYER".equalsIgnoreCase(loggedInRole)) {
+                    System.out.println("===== BUYER MENU =====");
+                    System.out.println("1. View Products");
+                    System.out.println("2. Search Products");
+                    System.out.println("3. Add to Cart");
+                    System.out.println("4. View Cart");
+                    System.out.println("5. Remove from Cart");
+                    System.out.println("6. Checkout");
+                    System.out.println("7. Favorites");
+                    System.out.println("8. View Notifications");
+                    System.out.println("9. View Order History");
+                    System.out.println("10. Review Product");
+                    System.out.println("11. View Product Reviews");
+                    System.out.println("12. Make Payment");
+                    System.out.println("13. Logout");
+
+                    System.out.print("Choice: ");
+                    int c = Integer.parseInt(sc.nextLine());
+
+                    switch (c) {
+                        case 1:
+                            try { productService.viewAllProducts(); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Error loading products: " + e.getMessage()); }
+                            break;
+                        case 2:
+                            System.out.print("Enter keyword: ");
+                            String keyword = sc.nextLine();
+                            try { productService.searchProducts(keyword); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Error searching products: " + e.getMessage()); }
+                            break;
+                        case 3:
+                            try {
+                                System.out.print("Product ID: ");
+                                int pid = Integer.parseInt(sc.nextLine());
+                                System.out.print("Quantity: ");
+                                int qty = Integer.parseInt(sc.nextLine());
+                                cartService.addProductWithStockCheck(loggedInUserId, pid, qty);
+                            } catch (NumberFormatException e) {
+                                logger.warn("Invalid numeric input for add to cart", e);
+                                System.out.println("Enter numeric values for Product ID and Quantity!");
+                            }
+                            break;
+                        case 4: cartService.viewCart(loggedInUserId); break;
+                        case 5:
+                            try {
+                                System.out.print("Product ID to remove: ");
+                                int rid = Integer.parseInt(sc.nextLine());
+                                cartService.removeProduct(loggedInUserId, rid);
+                            } catch (NumberFormatException e) {
+                                logger.warn("Invalid numeric input for remove from cart", e);
+                                System.out.println("Enter numeric Product ID!");
+                            }
+                            break;
+                        case 6: checkoutService.checkout(loggedInUserId); break;
+                        case 7:
+                            try { favService.favoritesMenu(loggedInUserId); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Error in favorites menu: " + e.getMessage()); }
+                            break;
+                        case 8:
+                            try { notificationService.showNotifications(loggedInUserId); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Error showing notifications: " + e.getMessage()); }
+                            break;
+                        case 9: orderService.viewOrderHistory(loggedInUserId); break;
+                        case 10:
+                            try { reviewService.reviewProduct(loggedInUserId); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Error submitting review: " + e.getMessage()); }
+                            break;
+                        case 11:
+                            try { reviewService.viewReviews(); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Error viewing reviews: " + e.getMessage()); }
+                            break;
+                        case 12:
+                            try { paymentService.makePayment(loggedInUserId); } 
+                            catch (SQLException e) { logger.error(e); System.out.println("Payment failed: " + e.getMessage()); }
+                            break;
+                        case 13:
+                            isLoggedIn = false; loggedInUserId = -1; loggedInRole = null;
+                            logger.info("Buyer logged out successfully.");
+                            System.out.println("Logged out successfully!");
+                            break;
+                        default:
+                            System.out.println("Invalid choice!");
+                            logger.warn("Invalid buyer menu choice: " + c);
+                            break;
+                    }
+                } 
+                // ================= SELLER MENU =================
+                else if (isLoggedIn && "SELLER".equalsIgnoreCase(loggedInRole)) {
+                    // NEW: sellerMenu now returns boolean indicating logout
+                    boolean sellerLoggedOut = sellerService.sellerMenu(loggedInUserId, sc);
+                    if (sellerLoggedOut) {
+                        isLoggedIn = false;
+                        loggedInUserId = -1;
+                        loggedInRole = null;
+                        logger.info("Seller logged out successfully.");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                logger.warn("Invalid numeric input in main loop", e);
+                System.out.println("Please enter numeric values only!");
+            } catch (Exception e) {
+                logger.error("Unexpected error in main loop", e);
+                System.out.println("An unexpected error occurred: " + e.getMessage());
+            }
+        }
+    }
+}

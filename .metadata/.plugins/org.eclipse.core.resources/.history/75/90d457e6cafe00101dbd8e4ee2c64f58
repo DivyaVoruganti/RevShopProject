@@ -1,0 +1,28 @@
+public void sellerMenu(int sellerId, Scanner sc) {
+    boolean logout = false;
+
+    while (!logout) {
+        System.out.println("\n===== SELLER MENU =====");
+        System.out.println("1. View My Products");
+        System.out.println("2. Add Product");
+        System.out.println("3. Update Product");
+        System.out.println("4. Update Product Price");
+        System.out.println("5. Delete Product");
+        System.out.println("6. View Product Reviews");
+        System.out.println("7. Set Inventory Threshold");
+        System.out.println("8. Check Low Stock Alerts");
+        System.out.println("9. Logout");
+        System.out.print("Choice: ");
+
+        int choice = Integer.parseInt(sc.nextLine());
+
+        switch (choice) {
+            case 9:
+                System.out.println("Logging out of seller menu...");
+                logout = true;
+                break;
+            default:
+                System.out.println("Option under development");
+        }
+    }
+}

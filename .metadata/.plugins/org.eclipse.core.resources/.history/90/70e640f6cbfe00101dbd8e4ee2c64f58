@@ -1,0 +1,170 @@
+package com.revshop.service;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+
+public class CartService {
+	
+	private static final Logger logger = Logger.getLogger(CartService.class);
+    private cartDAO cartDAO = new cartDAO();
+    private ProductDAO productDAO = new ProductDAO();
+    private NotificationService notificationService = new NotificationService();
+
+   
+    public boolean addProductWithStockCheck(int userId, int productId, int quantity) {
+       
+        int availableStock = productDAO.getAvailableStock(productId);
+
+        if (availableStock == -1) {
+            logger.info("Error checking stock!");
+            return false;
+        }
+
+        if (availableStock <= 0) {
+            logger.info("Product is out of stock!");
+            return false;
+        }
+
+        if (quantity > availableStock) {
+            logger.info("Only " + availableStock + " items available. Try again.");
+            return false;
+        }
+
+       
+        cartDAO.addToCart(userId, productId, quantity);
+        logger.info("Product added to cart!");
+        return true;
+    }
+
+    
+    public void viewCart(int userId) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection(); 
+            List<CartItem> cartItems = cartDAO.getCartItems(userId, con); // can throw SQLException
+
+            if (cartItems.isEmpty()) {
+                logger.info("Your cart is empty!");
+                return;
+            }
+
+           logger.info("ProductID | Quantity | Price | Total");
+
+            for (CartItem item : cartItems) {
+                double price = getProductPrice(item.getProductId(), con); // can throw SQLException
+                double total = price * item.getQuantity();
+                System.out.println(item.getProductId() + " | " +
+                        item.getQuantity() + " | " +
+                        price + " | " +
+                        total);
+            }
+
+        } catch (SQLException e) { 
+            logger.info("Error fetching cart: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) {}
+        }
+    }
+
+   
+    public void removeProduct(int userId, int productId) {
+        cartDAO.removeFromCart(userId, productId); // does NOT throw SQLException
+    }
+
+    
+    public void placeOrder(int buyerId) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            con.setAutoCommit(false);
+
+            String orderSql = "INSERT INTO orders (user_id, order_date) VALUES (?, SYSDATE)";
+            PreparedStatement orderPs = con.prepareStatement(orderSql, new String[]{"order_id"});
+            orderPs.setInt(1, buyerId);
+            orderPs.executeUpdate();
+
+            ResultSet rs = orderPs.getGeneratedKeys();
+            int orderId = 0;
+            if (rs.next()) orderId = rs.getInt(1);
+
+            rs.close();
+            orderPs.close();
+
+            List<CartItem> cartItems = cartDAO.getCartItems(buyerId, con); // can throw SQLException
+
+            for (CartItem item : cartItems) {
+                double price = getProductPrice(item.getProductId(), con);
+                String itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+                PreparedStatement itemPs = con.prepareStatement(itemSql);
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, item.getProductId());
+                itemPs.setInt(3, item.getQuantity());
+                itemPs.setDouble(4, price);
+                itemPs.executeUpdate();
+                itemPs.close();
+
+                int sellerId = getSellerIdByProduct(item.getProductId(), con);
+                notificationService.notifySeller(sellerId, "New order received for product ID: " + item.getProductId());
+            }
+
+            notificationService.notifyBuyer(buyerId, "Your order has been placed successfully");
+            cartDAO.clearCart(buyerId, con);
+            con.commit();
+
+            logger.info("Order placed successfully!");
+
+        } catch (SQLException e) { // valid catch
+            try { if (con != null) con.rollback(); } catch (SQLException ex) {}
+            System.out.println("Error placing order: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) {}
+        }
+    }
+
+   
+    private double getProductPrice(int productId, Connection con) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        double price = 0;
+        try {
+            String sql = "SELECT price FROM products WHERE product_id=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            if (rs.next()) price = rs.getDouble("price");
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {}
+            try { if (ps != null) ps.close(); } catch (SQLException e) {}
+        }
+        return price;
+    }
+
+    
+    private int getSellerIdByProduct(int productId, Connection con) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int sellerId = 0;
+        try {
+            String sql = "SELECT seller_id FROM products WHERE product_id=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            if (rs.next()) sellerId = rs.getInt("seller_id");
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {}
+            try { if (ps != null) ps.close(); } catch (SQLException e) {}
+        }
+        return sellerId;
+    }
+}

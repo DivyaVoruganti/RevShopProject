@@ -1,0 +1,54 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import com.revshop.dao.ReviewDAO;
+
+public class ReviewService {
+
+    private static final Logger logger =
+            Logger.getLogger(ReviewService.class);
+
+    private ReviewDAO dao = new ReviewDAO();
+    private Scanner sc = new Scanner(System.in);
+
+    public void reviewProduct(int userId) throws SQLException {
+
+        logger.info("Review process started for userId: " + userId);
+
+        System.out.print("Enter Product ID to review: ");
+        int pid = Integer.parseInt(sc.nextLine());
+
+        if (!dao.hasPurchased(userId, pid)) {
+            logger.warn("Review blocked. User " + userId +
+                        " tried to review unpurchased productId: " + pid);
+            System.out.println("You can review only purchased products.");
+            return;
+        }
+
+        System.out.print("Rating (1–5): ");
+        int rating = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Write review: ");
+        String text = sc.nextLine();
+
+        dao.addReview(userId, pid, rating, text);
+
+        logger.info("Review submitted successfully. userId=" + userId +
+                    ", productId=" + pid +
+                    ", rating=" + rating);
+
+        System.out.println("Review submitted successfully!");
+    }
+
+    public void viewReviews() throws SQLException {
+
+        System.out.print("Enter Product ID: ");
+        int pid = Integer.parseInt(sc.nextLine());
+
+        logger.info("Viewing reviews for productId: " + pid);
+
+        dao.viewProduct

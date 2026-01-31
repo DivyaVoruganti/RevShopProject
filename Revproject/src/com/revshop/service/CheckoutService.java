@@ -1,81 +1,100 @@
 package com.revshop.service;
-import java.sql.SQLException;
 
 import java.sql.Connection;
-import java.util.Scanner;
-import com.revshop.util.DBConnection;
-import com.revshop.dao.cartDAO;
 import java.sql.PreparedStatement;
-import java.sql.*;
-
-import com.revshop.model.CartItem;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Scanner;
+
+import org.apache.log4j.Logger;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
 
 public class CheckoutService {
-	
-	private cartDAO cartDao1 = new cartDAO(); 
-	private CartService cartService = new CartService();
+
+    private static final Logger logger = Logger.getLogger(CheckoutService.class);
+
+    private cartDAO cartDao1 = new cartDAO();
+    private CartService cartService = new CartService();
     private NotificationService notificationService = new NotificationService();
     private Scanner sc = new Scanner(System.in);
-    
+
     public void clearCart(int userId) throws SQLException {
-        Connection con = DBConnection.getConnection();
-        String sql = "DELETE FROM cart WHERE user_id = ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, userId);
-        
-        ps.executeUpdate();
-    }
-    
-    public void checkout(int userId) {
+
         Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = DBConnection.getConnection();
+            String sql = "DELETE FROM cart WHERE user_id = ?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+
+            logger.info("Cart cleared for userId: " + userId);
+
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing resources in clearCart", e);
+            }
+        }
+    }
+
+    public void checkout(int userId) {
+
+        Connection con = null;
+
         try {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
 
-            System.out.println("\n===== CHECKOUT =====");
+            logger.info("Checkout started for userId: " + userId);
 
-           
+            // View cart
             cartDao1.viewCart(userId);
 
             sc.nextLine(); // consume newline
-            System.out.print("Enter shipping address: ");
+            logger.info("Waiting for shipping address input");
             String shipping = sc.nextLine();
-            System.out.print("Enter billing address: ");
+
+            logger.info("Waiting for billing address input");
             String billing = sc.nextLine();
 
-            
             List<CartItem> cartItems = cartDao1.getCartItems(userId, con);
 
             if (cartItems.isEmpty()) {
-                System.out.println("Cart is empty. Cannot checkout.");
+                logger.warn("Cart is empty. Checkout aborted for userId: " + userId);
                 return;
             }
 
-           
             double total = 0;
             for (CartItem item : cartItems) {
                 total += item.getQuantity() * item.getPrice();
             }
 
-            
-            String orderSql = "INSERT INTO orders (user_id, total_amount, shipping_address, billing_address) VALUES (?, ?, ?, ?)";
-            PreparedStatement orderPs = con.prepareStatement(orderSql, new String[]{"order_id"});
+            String orderSql =
+                    "INSERT INTO orders (user_id, total_amount, shipping_address, billing_address) VALUES (?, ?, ?, ?)";
+            PreparedStatement orderPs =
+                    con.prepareStatement(orderSql, new String[] { "order_id" });
+
             orderPs.setInt(1, userId);
             orderPs.setDouble(2, total);
             orderPs.setString(3, shipping);
             orderPs.setString(4, billing);
             orderPs.executeUpdate();
 
-           
             ResultSet orderKeys = orderPs.getGeneratedKeys();
             orderKeys.next();
             int orderId = orderKeys.getInt(1);
 
-           
-            String itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+            String itemSql =
+                    "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
             PreparedStatement itemPs = con.prepareStatement(itemSql);
 
             for (CartItem item : cartItems) {
@@ -85,34 +104,30 @@ public class CheckoutService {
                 itemPs.setDouble(4, item.getPrice());
                 itemPs.addBatch();
             }
-            itemPs.executeBatch();
 
-           
+            itemPs.executeBatch();
             cartDao1.clearCart(userId, con);
 
-            
             con.commit();
 
-            System.out.println("Order placed successfully!");
-            System.out.println("Order ID: " + orderId);
-            System.out.println("Total Amount: " + total);
+            logger.info("Order placed successfully. OrderId: " + orderId +
+                        ", UserId: " + userId +
+                        ", Total: " + total);
 
         } catch (Exception e) {
             try {
                 if (con != null) con.rollback();
-            } catch (SQLException ignored) {}
-            System.out.println("Checkout failed.");
-            e.printStackTrace();
+            } catch (SQLException ex) {
+                logger.error("Rollback failed during checkout", ex);
+            }
+            logger.error("Checkout failed for userId: " + userId, e);
+
         } finally {
             try {
                 if (con != null) con.close();
-            } catch (SQLException ignored) {}
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection after checkout", e);
+            }
         }
     }
-    
 }
-
-
-    
-
-

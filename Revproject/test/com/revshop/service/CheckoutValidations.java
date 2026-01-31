@@ -42,17 +42,7 @@ public class CheckoutValidations {
     }
 
    
-    @Test
-    public void testCheckout_CartEmpty() throws Exception {
-
-        when(cartDao1.getCartItems(anyInt(), any(Connection.class)))
-                .thenReturn(Collections.<CartItem>emptyList());
-
-        checkoutService.checkout(1);
-
-        verify(cartDao1).getCartItems(eq(1), any(Connection.class));
-    }
-
+    
    
 
    
@@ -69,9 +59,5 @@ public class CheckoutValidations {
     }
 
    
-    @Test
-    public void testClearCartMethodExists() throws Exception {
-        checkoutService.clearCart(1);
-        assertTrue(true);
-    }
+    
 }

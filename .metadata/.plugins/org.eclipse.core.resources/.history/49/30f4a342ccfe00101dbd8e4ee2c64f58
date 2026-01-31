@@ -1,0 +1,106 @@
+package com.revshop.dao;
+
+import com.revshop.util.DBConnection;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class ProductDAO {
+
+    private static final Logger logger =
+            Logger.getLogger(ProductDAO.class);
+
+    // ================= VIEW ALL PRODUCTS =================
+    public void viewAllProducts() {
+
+        String sql =
+                "SELECT product_id, name, price, discount_price, stock, category " +
+                "FROM products";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+
+            System.out.println("ID | Name | Price | Discount | Stock | Category");
+
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getDouble("price") + " | " +
+                        rs.getDouble("discount_price") + " | " +
+                        rs.getInt("stock") + " | " +
+                        rs.getString("category")
+                );
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching all products", e);
+            System.out.println("❌ Unable to fetch products.");
+        }
+    }
+
+    // ================= SEARCH PRODUCTS =================
+    public void searchByKeyword(String keyword) {
+
+        String sql =
+                "SELECT product_id, name FROM products " +
+                "WHERE LOWER(name) LIKE ?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+
+            ps.setString(1, "%" + keyword.toLowerCase() + "%");
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getInt("product_id") + " | " +
+                            rs.getString("name")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error searching products", e);
+            System.out.println("❌ Search failed.");
+        }
+    }
+
+    // ================= SELLER PRODUCTS =================
+    public void getProductsBySeller(int sellerId) {
+
+        String sql =
+                "SELECT product_id, name FROM products WHERE seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, sellerId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getInt("product_id") + " | " +
+                            rs.getString("name")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching seller products", e);
+            System.out.println("❌ Could not fetch seller products.");
+        }
+    }
+}

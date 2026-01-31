@@ -1,0 +1,238 @@
+package com.revshop.service;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import com.revshop.dao.ProductDAO;
+import com.revshop.dao.UserDAO;
+import com.revshop.model.Product;
+
+import org.apache.log4j.Logger;
+
+public class SellerService {
+
+    private static final Logger logger = Logger.getLogger(SellerService.class);
+
+    private ProductDAO productDAO = new ProductDAO();
+    private UserDAO userDAO = new UserDAO();
+
+    // ================= ADD PRODUCT =================
+    public void addProduct(String name, double mrp, double discountPrice,
+                           int stock, String category, String description, int sellerId) {
+
+        if (!isSeller(sellerId)) {
+            logger.warn("Unauthorized add product attempt by userId=" + sellerId);
+            System.out.println("Error: Only sellers can add products.");
+            return;
+        }
+
+        if (discountPrice > mrp) {
+            logger.warn("Discount price greater than MRP for sellerId=" + sellerId);
+            System.out.println("Error: Discount price cannot be greater than MRP.");
+            return;
+        }
+
+        Product product = new Product();
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+        product.setSellerId(sellerId);
+
+        try {
+            productDAO.addProduct(product);
+            logger.info("Product added successfully: " + name + " by sellerId=" + sellerId);
+            System.out.println("Product added successfully!");
+        } catch (SQLException e) {
+            logger.error("Error adding product for sellerId=" + sellerId, e);
+            System.out.println("Error adding product: " + e.getMessage());
+        }
+    }
+
+    // ================= ROLE CHECK =================
+    private boolean isSeller(int userId) {
+        String role = userDAO.getRoleByUserId(userId);
+        return "SELLER".equalsIgnoreCase(role);
+    }
+
+    // ================= VIEW SELLER PRODUCTS =================
+    public void viewSellerProducts(int sellerId) {
+        logger.info("Viewing products for sellerId=" + sellerId);
+        productDAO.getProductsBySeller(sellerId);
+    }
+
+    // ================= UPDATE PRODUCT =================
+    public void updateProduct(int productId, int sellerId, String name, double mrp,
+                              double discountPrice, int stock, String category, String description) {
+
+        if (discountPrice > mrp) {
+            logger.warn("Discount price greater than MRP during update for sellerId=" + sellerId);
+            System.out.println("Discount price cannot be greater than MRP");
+            return;
+        }
+
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setSellerId(sellerId);
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+
+        productDAO.updateProduct(product); // internal catch
+        logger.info("Product updated successfully. productId=" + productId + ", sellerId=" + sellerId);
+        System.out.println("Product updated successfully!");
+    }
+
+    // ================= UPDATE PRODUCT PRICE =================
+    public void updatePrice(int sellerId) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.print("Enter Product ID: ");
+            int productId = Integer.parseInt(sc.nextLine());
+            System.out.print("Enter New MRP: ");
+            double newMrp = Double.parseDouble(sc.nextLine());
+            System.out.print("Enter New Discount Price: ");
+            double newDiscount = Double.parseDouble(sc.nextLine());
+
+            if (newDiscount > newMrp) {
+                logger.warn("Discount price greater than MRP for productId=" + productId);
+                System.out.println("Discount price cannot be greater than MRP");
+                return;
+            }
+
+            Product product = new Product();
+            product.setProductId(productId);
+            product.setSellerId(sellerId);
+            product.setMrp(newMrp);
+            product.setDiscountPrice(newDiscount);
+
+            productDAO.updateProductPrice(product); // internal catch
+            logger.info("Product price updated successfully. productId=" + productId + ", sellerId=" + sellerId);
+            System.out.println("Price updated successfully!");
+        } catch (NumberFormatException e) {
+            logger.warn("Invalid numeric input for updating price by sellerId=" + sellerId, e);
+            System.out.println("Invalid input! Enter numeric values.");
+        }
+    }
+
+    // ================= DELETE PRODUCT =================
+    public void deleteProduct(int productId, int sellerId) {
+        logger.info("Deleting productId=" + productId + " by sellerId=" + sellerId);
+        productDAO.deleteProduct(productId, sellerId);
+    }
+
+    // ================= VIEW PRODUCT REVIEWS =================
+    public void viewProductReviews(int sellerId) {
+        logger.info("Viewing product reviews for sellerId=" + sellerId);
+        productDAO.viewProductReviewsBySeller(sellerId);
+    }
+
+    // ================= SET INVENTORY THRESHOLD =================
+    public void setInventoryThreshold(int sellerId) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.print("Enter Product ID: ");
+            int productId = Integer.parseInt(sc.nextLine());
+            System.out.print("Enter Threshold: ");
+            int threshold = Integer.parseInt(sc.nextLine());
+
+            productDAO.updateStockThreshold(productId, sellerId, threshold); // internal catch
+            logger.info("Stock threshold updated for productId=" + productId + ", sellerId=" + sellerId);
+            System.out.println("Threshold updated successfully!");
+        } catch (NumberFormatException e) {
+            logger.warn("Invalid numeric input for setting threshold by sellerId=" + sellerId, e);
+            System.out.println("Invalid input! Enter numeric values only.");
+        }
+    }
+
+    // ================= CHECK LOW STOCK ALERTS =================
+    public void checkLowStockAlerts(int sellerId) {
+        logger.info("Checking low stock alerts for sellerId=" + sellerId);
+        productDAO.checkLowStock(sellerId);
+    }
+
+    // ================= SELLER MENU =================
+    public void sellerMenu(int sellerId, Scanner sc) {
+        while (true) {
+            System.out.println("\n===== SELLER MENU =====");
+            System.out.println("1. View My Products");
+            System.out.println("2. Add Product");
+            System.out.println("3. Update Product");
+            System.out.println("4. Update Product Price");
+            System.out.println("5. Delete Product");
+            System.out.println("6. View Product Reviews");
+            System.out.println("7. Set Inventory Threshold");
+            System.out.println("8. Check Low Stock Alerts");
+            System.out.println("9. Logout");
+
+            System.out.print("Choice: ");
+            int choice;
+            try {
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                logger.warn("Invalid numeric input in seller menu by sellerId=" + sellerId, e);
+                System.out.println("Enter numeric values only!");
+                continue;
+            }
+
+            switch (choice) {
+                case 1: viewSellerProducts(sellerId); break;
+                case 2:
+                    try {
+                        System.out.print("Name: "); String name = sc.nextLine();
+                        System.out.print("MRP: "); double mrp = Double.parseDouble(sc.nextLine());
+                        System.out.print("Discount Price: "); double discount = Double.parseDouble(sc.nextLine());
+                        System.out.print("Stock: "); int stock = Integer.parseInt(sc.nextLine());
+                        System.out.print("Category: "); String category = sc.nextLine();
+                        System.out.print("Description: "); String desc = sc.nextLine();
+                        addProduct(name, mrp, discount, stock, category, desc, sellerId);
+                    } catch (NumberFormatException e) {
+                        logger.warn("Invalid numeric input while adding product by sellerId=" + sellerId, e);
+                        System.out.println("Invalid input! Enter numeric values.");
+                    }
+                    break;
+                case 3:
+                    try {
+                        System.out.print("Product ID: "); int pid = Integer.parseInt(sc.nextLine());
+                        System.out.print("New Name: "); String n = sc.nextLine();
+                        System.out.print("New MRP: "); double pMrp = Double.parseDouble(sc.nextLine());
+                        System.out.print("New Discount Price: "); double pDiscount = Double.parseDouble(sc.nextLine());
+                        System.out.print("New Stock: "); int pStock = Integer.parseInt(sc.nextLine());
+                        System.out.print("New Category: "); String pCategory = sc.nextLine();
+                        System.out.print("New Description: "); String pDesc = sc.nextLine();
+                        updateProduct(pid, sellerId, n, pMrp, pDiscount, pStock, pCategory, pDesc);
+                    } catch (NumberFormatException e) {
+                        logger.warn("Invalid numeric input while updating product by sellerId=" + sellerId, e);
+                        System.out.println("Invalid input! Enter numeric values.");
+                    }
+                    break;
+                case 4: updatePrice(sellerId); break;
+                case 5:
+                    try {
+                        System.out.print("Product ID: "); int delId = Integer.parseInt(sc.nextLine());
+                        deleteProduct(delId, sellerId);
+                    } catch (NumberFormatException e) {
+                        logger.warn("Invalid numeric input while deleting product by sellerId=" + sellerId, e);
+                        System.out.println("Invalid input! Enter numeric values.");
+                    }
+                    break;
+                case 6: viewProductReviews(sellerId); break;
+                case 7: setInventoryThreshold(sellerId); break;
+                case 8: checkLowStockAlerts(sellerId); break;
+                case 9:
+                    logger.info("Seller logged out. sellerId=" + sellerId);
+                    System.out.println("Logging out...");
+                    return;
+                default:
+                    logger.warn("Invalid choice in seller menu by sellerId=" + sellerId + ": " + choice);
+                    System.out.println("Invalid choice!");
+                    break;
+            }
+        }
+    }
+}

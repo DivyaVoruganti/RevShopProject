@@ -1,0 +1,37 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.SQLException;
+
+import com.revshop.dao.OrderDAO;
+
+public class OrderService {
+
+    private static final Logger logger =
+            Logger.getLogger(OrderService.class);
+
+    private OrderDAO orderDao = new OrderDAO();
+
+    public void viewOrdersBySeller(int sellerId) throws SQLException {
+
+        logger.info("Fetching orders for sellerId: " + sellerId);
+
+        orderDao.viewOrdersBySeller(sellerId);
+
+        logger.info("Orders displayed successfully for sellerId: " + sellerId);
+    }
+
+    public void viewOrderHistory(int userId) {
+
+        logger.info("Fetching order history for userId: " + userId);
+
+        try {
+            orderDao.viewOrderHistory(userId);
+            logger.info("Order history displayed successfully for userId: " + userId);
+
+        } catch (SQLException e) {
+            logger.error("Error fetching order history for userId: " + userId, e);
+        }
+    }
+}

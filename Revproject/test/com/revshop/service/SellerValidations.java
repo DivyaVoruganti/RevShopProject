@@ -86,7 +86,7 @@ public class SellerValidations {
     public void testUpdateProduct_DiscountGreaterThanMRP() throws SQLException {
         int sellerId = 1;
 
-        // Discount > MRP should prevent update
+        
         sellerService.updateProduct(101, sellerId, "Laptop Pro", 50000, 60000, 15, "Electronics", "Updated Laptop");
 
         verify(productDAO, never()).updateProduct(any(Product.class));

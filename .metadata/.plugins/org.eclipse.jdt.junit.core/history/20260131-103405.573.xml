@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="ProductServiceTest" project="Revproject" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="com.revshop.service.ProductServiceTest" time="0.0">
-    <testcase name="testViewAllProductsBySeller" classname="com.revshop.service.ProductServiceTest" time="0.0"/>
-  </testsuite>
-</testrun>

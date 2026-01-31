@@ -1,9 +1,0 @@
-package com.revshop.model;
-
-public class Order {
-	private int orderId;
-    private int userId;
-    private Date orderDate;
-    private double totalAmount;
-
-}

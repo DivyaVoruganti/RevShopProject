@@ -1,35 +1,46 @@
 package com.revshop.service;
+
 import java.sql.SQLException;
 import java.util.Scanner;
+
+import org.apache.log4j.Logger;
+
 import com.revshop.dao.ReviewDAO;
 
 public class ReviewService {
-	private ReviewDAO dao = new ReviewDAO();
+
+    private static final Logger logger = Logger.getLogger(ReviewService.class);
+
+    private ReviewDAO dao = new ReviewDAO();
     private Scanner sc = new Scanner(System.in);
 
     public void reviewProduct(int userId) throws SQLException {
-        System.out.print("Enter Product ID to review: ");
+
+        logger.info("Waiting for product ID for review. UserId: " + userId);
         int pid = Integer.parseInt(sc.nextLine());
 
         if (!dao.hasPurchased(userId, pid)) {
-            System.out.println("You can review only purchased products.");
+            logger.warn("User has not purchased product. UserId: " + userId + ", ProductId: " + pid);
             return;
         }
 
-        System.out.print("Rating (1–5): ");
+        logger.info("Waiting for rating (1-5). UserId: " + userId + ", ProductId: " + pid);
         int rating = Integer.parseInt(sc.nextLine());
 
-        System.out.print("Write review: ");
+        logger.info("Waiting for review text. UserId: " + userId + ", ProductId: " + pid);
         String text = sc.nextLine();
 
         dao.addReview(userId, pid, rating, text);
-        System.out.println("Review submitted successfully!");
+
+        logger.info("Review submitted successfully. UserId: " + userId + ", ProductId: " + pid);
     }
 
     public void viewReviews() throws SQLException {
-        System.out.print("Enter Product ID: ");
-        int pid = Integer.parseInt(sc.nextLine());
-        dao.viewProductReviews(pid);
-    }
 
+        logger.info("Waiting for product ID to view reviews");
+        int pid = Integer.parseInt(sc.nextLine());
+
+        dao.viewProductReviews(pid);
+        logger.info("Displayed reviews for ProductId: " + pid);
+    }
 }

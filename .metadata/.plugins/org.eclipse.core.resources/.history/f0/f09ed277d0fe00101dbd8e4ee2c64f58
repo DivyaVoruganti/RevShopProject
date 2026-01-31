@@ -1,0 +1,53 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.ProductDAO;
+
+public class ProductValidations {
+
+    @Mock
+    private ProductDAO productDAO;
+
+    @InjectMocks
+    private ProductService productService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+    @Test
+    public void testViewAllProductsBySeller() throws SQLException {
+
+        int sellerId = 101;
+
+        productService.viewAllProducts(sellerId);
+
+        verify(productDAO).getProductsBySeller(sellerId);
+    }
+    @Test
+    public void testViewAllProducts() throws SQLException {
+
+        productService.viewAllProducts();
+
+        verify(productDAO).viewAllProducts();
+    }
+    @Test
+    public void testSearchProducts() throws SQLException {
+
+        String keyword = "mobile";
+
+        productService.searchProducts(keyword);
+
+        verify(productDAO).searchByKeyword(keyword);
+    }
+
+}

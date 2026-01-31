@@ -54,5 +54,3 @@ public class Seller {
 	        return "Seller [sellerId=" + sellerId + ", businessName=" + businessName + ", email=" + email + "]";
 	    }
 	}
-
-

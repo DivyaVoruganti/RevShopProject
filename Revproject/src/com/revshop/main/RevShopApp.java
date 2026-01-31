@@ -189,7 +189,6 @@ public class RevShopApp {
                 }
             } 
             else if (isLoggedIn && "SELLER".equalsIgnoreCase(loggedInRole)) {
-                // Just call SellerService menu; it handles all exceptions internally
                 sellerService.sellerMenu(loggedInUserId, sc);
             }
         }

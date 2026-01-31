@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class ProductDAO {
 
-    // ================= VIEW ALL PRODUCTS =================
+    
     public void viewAllProducts() {
         Connection con = null;
         PreparedStatement ps = null;
@@ -40,7 +40,7 @@ public class ProductDAO {
         }
     }
 
-    // ================= SEARCH PRODUCTS =================
+    
     public void searchByKeyword(String keyword) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -108,7 +108,7 @@ public class ProductDAO {
         }
     }
 
-    // ================= GET PRODUCTS BY SELLER =================
+    
     public void getProductsBySeller(int sellerId) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -142,7 +142,7 @@ public class ProductDAO {
         }
     }
 
-    // ================= DELETE PRODUCT =================
+   
     public void deleteProduct(int productId, int sellerId) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -165,7 +165,7 @@ public class ProductDAO {
         }
     }
 
-    // ================= UPDATE PRODUCT =================
+    
     public void updateProduct(Product product) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -195,7 +195,6 @@ public class ProductDAO {
         }
     }
 
-    // ================= UPDATE PRODUCT PRICE =================
     public void updateProductPrice(Product product) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -216,7 +215,6 @@ public class ProductDAO {
         }
     }
 
-    // ================= VIEW PRODUCT REVIEWS =================
     public void viewProductReviewsBySeller(int sellerId) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -245,7 +243,6 @@ public class ProductDAO {
         }
     }
 
-    // ================= UPDATE STOCK THRESHOLD =================
     public void updateStockThreshold(int productId, int sellerId, int threshold) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -265,7 +262,6 @@ public class ProductDAO {
         }
     }
 
-    // ================= GET AVAILABLE STOCK =================
     public int getAvailableStock(int productId) {
         Connection con = null;
         PreparedStatement ps = null;

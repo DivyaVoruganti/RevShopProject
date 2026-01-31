@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="ProductServiceTest" project="Revproject" tests="3" started="3" failures="0" errors="0" ignored="0">
-  <testsuite name="com.revshop.service.ProductServiceTest" time="0.001">
-    <testcase name="testSearchProducts" classname="com.revshop.service.ProductServiceTest" time="0.0"/>
-    <testcase name="testViewAllProducts" classname="com.revshop.service.ProductServiceTest" time="0.001"/>
-    <testcase name="testViewAllProductsBySeller" classname="com.revshop.service.ProductServiceTest" time="0.0"/>
-  </testsuite>
-</testrun>

@@ -1,0 +1,10 @@
+package com.revshop.service;
+
+public class UserDAO {
+
+    // Stub: get role by userId
+    public String getRoleByUserId(int userId) {
+        // Always return SELLER for testing; replace with DB logic later
+        return "SELLER";
+    }
+}

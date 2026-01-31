@@ -42,7 +42,7 @@ public class CartValidations {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this); // ✅ JUnit 4 compatible
+        MockitoAnnotations.initMocks(this); 
     }
 
     @Test

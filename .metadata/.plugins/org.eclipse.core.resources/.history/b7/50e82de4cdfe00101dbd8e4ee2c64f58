@@ -1,0 +1,37 @@
+package com.revshop.service;
+
+import java.util.Scanner;
+import org.apache.log4j.Logger;
+
+public class UserService {
+
+    private static final Logger logger =
+            Logger.getLogger(UserService.class);
+
+    // return userId if success, -1 if failed
+    public int login(Scanner sc) {
+
+        System.out.print("Username: ");
+        String username = sc.nextLine();
+
+        System.out.print("Password: ");
+        String password = sc.nextLine();
+
+        // 🔹 Dummy logic (replace with DAO later)
+        if ("seller".equals(username) && "123".equals(password)) {
+            logger.info("Login successful for seller");
+            return 1;   // sample userId
+        }
+
+        System.out.println("Invalid credentials");
+        return -1;
+    }
+
+    public void register(Scanner sc) {
+        System.out.println("Registration logic here");
+    }
+
+    public String getRoleByUserId(int userId) {
+        return "SELLER"; // sample
+    }
+}

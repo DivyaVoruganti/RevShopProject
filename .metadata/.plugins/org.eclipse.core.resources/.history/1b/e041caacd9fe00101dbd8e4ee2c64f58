@@ -1,0 +1,117 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.ProductDAO;
+import com.revshop.dao.UserDAO;
+import com.revshop.model.Product;
+
+public class SellerValidations {
+
+    @Mock
+    private ProductDAO productDAO;
+
+    @Mock
+    private UserDAO userDAO;
+
+    @InjectMocks
+    private SellerService sellerService;
+
+    @Before
+    public void setUp() {
+        
+        MockitoAnnotations.initMocks(this);
+    }
+
+   
+    @Test
+    public void testAddProduct_Success() throws SQLException {
+        int sellerId = 1;
+
+        
+        when(userDAO.getRoleByUserId(sellerId)).thenReturn("seller");
+
+        
+        sellerService.addProduct("Laptop", 50000, 45000, 10, "Electronics", "Gaming Laptop", sellerId);
+
+        
+        verify(productDAO).addProduct(any(Product.class));
+    }
+
+    @Test
+    public void testAddProduct_DiscountGreaterThanMRP() throws SQLException {
+        int sellerId = 1;
+        when(userDAO.getRoleByUserId(sellerId)).thenReturn("seller");
+
+        
+        sellerService.addProduct("Laptop", 50000, 55000, 10, "Electronics", "Gaming Laptop", sellerId);
+
+        
+        verify(productDAO, never()).addProduct(any(Product.class));
+    }
+
+    @Test
+    public void testAddProduct_NonSeller() throws SQLException {
+        int userId = 2;
+        when(userDAO.getRoleByUserId(userId)).thenReturn("buyer");
+
+        sellerService.addProduct("Laptop", 50000, 45000, 10, "Electronics", "Gaming Laptop", userId);
+
+        
+        verify(productDAO, never()).addProduct(any(Product.class));
+    }
+
+    
+    @Test
+    public void testUpdateProduct_Success() throws SQLException {
+        int sellerId = 1;
+
+       
+        sellerService.updateProduct(101, sellerId, "Laptop Pro", 60000, 55000, 15, "Electronics", "Updated Laptop");
+
+       
+        verify(productDAO).updateProduct(any(Product.class));
+    }
+
+    @Test
+    public void testUpdateProduct_DiscountGreaterThanMRP() throws SQLException {
+        int sellerId = 1;
+
+        // Discount > MRP should prevent update
+        sellerService.updateProduct(101, sellerId, "Laptop Pro", 50000, 60000, 15, "Electronics", "Updated Laptop");
+
+        verify(productDAO, never()).updateProduct(any(Product.class));
+    }
+
+    
+    @Test
+    public void testDeleteProduct_Success() throws SQLException {
+        int sellerId = 1;
+        int productId = 101;
+
+        sellerService.deleteProduct(productId, sellerId);
+
+        verify(productDAO).deleteProduct(productId, sellerId);
+    }
+
+    
+
+    
+    @Test
+    public void testViewSellerProducts() throws SQLException {
+        int sellerId = 1;
+
+        sellerService.viewSellerProducts(sellerId);
+
+        verify(productDAO).getProductsBySeller(sellerId);
+    }
+}

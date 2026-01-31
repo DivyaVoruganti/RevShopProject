@@ -1,0 +1,131 @@
+package com.revshop.service;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.revshop.dao.UserDAO;
+import com.revshop.util.DBConnection;
+
+import org.apache.log4j.Logger;
+
+public class UserService {
+
+    private static final Logger logger = Logger.getLogger(UserService.class);
+
+    private UserDAO userDAO = new UserDAO();
+
+    // ================= REGISTER =================
+    public boolean register(String name, String email, String password, String role) {
+        logger.info("Register request for email: " + email + ", role: " + role);
+        boolean result = userDAO.register(name, email, password, role);
+        if (result) {
+            logger.info("Registration successful for email: " + email);
+        } else {
+            logger.warn("Registration failed for email: " + email);
+        }
+        return result;
+    }
+
+    // ================= CHANGE PASSWORD =================
+    public boolean changePassword(String email, String newPwd) {
+        logger.info("Change password request for email: " + email);
+        boolean result = userDAO.changePassword(email, newPwd);
+        if (result) {
+            logger.info("Password changed successfully for email: " + email);
+        } else {
+            logger.warn("Password change failed for email: " + email);
+        }
+        return result;
+    }
+
+    // ================= LOGIN =================
+    public String login(String email, String password) {
+        logger.info("Login attempt for email: " + email);
+        String role = userDAO.loginAndGetRole(email, password);
+        if (role != null) {
+            logger.info("Login successful for email: " + email + ", role: " + role);
+        } else {
+            logger.warn("Login failed for email: " + email);
+        }
+        return role;
+    }
+
+    // ================= LOGIN AND GET USER ID =================
+    public int loginAndGetUserId(String email, String password) {
+        int userId = -1;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT user_id FROM users WHERE email=? AND password=?")) {
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    userId = rs.getInt("user_id");
+                    logger.info("User ID fetched successfully for email: " + email + ", userId: " + userId);
+                } else {
+                    logger.warn("No user found with email: " + email);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching user ID for email: " + email, e);
+        }
+
+        return userId;
+    }
+
+    // ================= LOGIN AND GET ROLE =================
+    public String loginAndGetRole(String email, String password) {
+        String role = null;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT role FROM users WHERE email=? AND password=?")) {
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    role = rs.getString("role");
+                    logger.info("Role fetched successfully for email: " + email + ", role: " + role);
+                } else {
+                    logger.warn("No role found for email: " + email);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching role for email: " + email, e);
+        }
+
+        return role;
+    }
+
+    // ================= GET ROLE BY USER ID =================
+    public String getRoleByUserId(int userId) {
+        String role = null;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT role FROM users WHERE user_id=?")) {
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    role = rs.getString("role");
+                    logger.info("Role fetched successfully for userId: " + userId + ", role: " + role);
+                } else {
+                    logger.warn("No role found for userId: " + userId);
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching role for userId: " + userId, e);
+        }
+
+        return role;
+    }
+}

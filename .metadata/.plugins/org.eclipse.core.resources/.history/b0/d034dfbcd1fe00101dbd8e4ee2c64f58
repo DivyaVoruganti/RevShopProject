@@ -1,0 +1,35 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+import com.revshop.dao.ProductDAO;
+
+public class ProductService {
+
+    private static final Logger logger =
+            Logger.getLogger(ProductService.class);
+
+    private ProductDAO productDAO;
+
+    public ProductService() {
+        productDAO = new ProductDAO();
+        logger.info("ProductService initialized");
+    }
+
+    // ================= SELLER PRODUCTS =================
+    public void viewProductsBySeller(int sellerId) {
+        logger.info("Viewing products for sellerId: " + sellerId);
+        productDAO.getProductsBySeller(sellerId);
+    }
+
+    // ================= ALL PRODUCTS =================
+    public void viewAllProducts() {
+        logger.info("Viewing all products");
+        productDAO.viewAllProducts();
+    }
+
+    // ================= SEARCH =================
+    public void searchProducts(String keyword) {
+        logger.info("Searching products: " + keyword);
+        productDAO.searchByKeyword(keyword);
+    }
+}

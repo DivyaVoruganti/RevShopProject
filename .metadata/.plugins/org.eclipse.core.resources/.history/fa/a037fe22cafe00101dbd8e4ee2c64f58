@@ -1,0 +1,176 @@
+package com.revshop.service;
+
+import com.revshop.dao.ProductDAO;
+import com.revshop.dao.UserDAO;
+import com.revshop.model.Product;
+import org.apache.log4j.Logger;
+
+import java.util.Scanner;
+
+public class SellerService {
+
+    private static final Logger logger = Logger.getLogger(SellerService.class);
+
+    private ProductDAO productDAO = new ProductDAO();
+    private UserDAO userDAO = new UserDAO();
+
+    // ================= ROLE CHECK =================
+    private boolean isSeller(int userId) {
+        return "SELLER".equalsIgnoreCase(userDAO.getRoleByUserId(userId));
+    }
+
+    // ================= SELLER MENU =================
+    public boolean sellerMenu(int sellerId, Scanner sc) {
+
+        if (!isSeller(sellerId)) {
+            System.out.println("Access denied. Seller only.");
+            logger.warn("Non-seller tried to access seller menu: " + sellerId);
+            return true;
+        }
+
+        while (true) {
+            System.out.println("\n===== SELLER MENU =====");
+            System.out.println("1. View My Products");
+            System.out.println("2. Add Product");
+            System.out.println("3. Update Product");
+            System.out.println("4. Delete Product");
+            System.out.println("5. View Product Reviews");
+            System.out.println("6. Logout");
+
+            System.out.print("Choice: ");
+
+            int choice;
+            try {
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Enter numbers only.");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    productDAO.getProductsBySeller(sellerId);
+                    break;
+
+                case 2:
+                    addProductFlow(sc, sellerId);
+                    break;
+
+                case 3:
+                    updateProductFlow(sc, sellerId);
+                    break;
+
+                case 4:
+                    System.out.print("Enter Product ID: ");
+                    int delId = Integer.parseInt(sc.nextLine());
+                    productDAO.deleteProduct(delId, sellerId);
+                    break;
+
+                case 5:
+                    productDAO.viewProductReviewsBySeller(sellerId);
+                    break;
+
+                case 6:
+                    System.out.println("Logging out...");
+                    logger.info("Seller logged out: " + sellerId);
+                    return true;
+
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    // ================= ADD PRODUCT FLOW =================
+    private void addProductFlow(Scanner sc, int sellerId) {
+
+        try {
+            System.out.print("Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("MRP: ");
+            double mrp = Double.parseDouble(sc.nextLine());
+
+            System.out.print("Discount Price: ");
+            double discount = Double.parseDouble(sc.nextLine());
+
+            if (discount > mrp) {
+                System.out.println("Discount cannot exceed MRP.");
+                return;
+            }
+
+            System.out.print("Stock: ");
+            int stock = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Category: ");
+            String category = sc.nextLine();
+
+            System.out.print("Description: ");
+            String desc = sc.nextLine();
+
+            Product p = new Product();
+            p.setName(name);
+            p.setMrp(mrp);
+            p.setDiscountPrice(discount);
+            p.setStock(stock);
+            p.setCategory(category);
+            p.setDescription(desc);
+            p.setSellerId(sellerId);
+
+            productDAO.addProduct(p);
+            logger.info("Product added by seller " + sellerId);
+
+        } catch (Exception e) {
+            System.out.println("Invalid input.");
+            logger.error("Add product failed", e);
+        }
+    }
+
+    // ================= UPDATE PRODUCT FLOW =================
+    private void updateProductFlow(Scanner sc, int sellerId) {
+
+        try {
+            System.out.print("Product ID: ");
+            int pid = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("MRP: ");
+            double mrp = Double.parseDouble(sc.nextLine());
+
+            System.out.print("Discount Price: ");
+            double discount = Double.parseDouble(sc.nextLine());
+
+            if (discount > mrp) {
+                System.out.println("Discount cannot exceed MRP.");
+                return;
+            }
+
+            System.out.print("Stock: ");
+            int stock = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Category: ");
+            String category = sc.nextLine();
+
+            System.out.print("Description: ");
+            String desc = sc.nextLine();
+
+            Product p = new Product();
+            p.setProductId(pid);
+            p.setSellerId(sellerId);
+            p.setName(name);
+            p.setMrp(mrp);
+            p.setDiscountPrice(discount);
+            p.setStock(stock);
+            p.setCategory(category);
+            p.setDescription(desc);
+
+            productDAO.updateProduct(p);
+
+        } catch (Exception e) {
+            System.out.println("Invalid input.");
+            logger.error("Update product failed", e);
+        }
+    }
+}

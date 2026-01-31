@@ -1,0 +1,15 @@
+
+public class log4jproperties {
+	log4j.rootLogger=INFO, FILE
+
+			log4j.appender.FILE=org.apache.log4j.RollingFileAppender
+			log4j.appender.FILE.File=C:/logs/revshop.log
+			log4j.appender.FILE.MaxFileSize=5MB
+			log4j.appender.FILE.MaxBackupIndex=5
+			log4j.appender.FILE.Append=true
+
+			log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+			log4j.appender.FILE.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c:%L - %m%n
+
+
+}

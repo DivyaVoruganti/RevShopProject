@@ -13,7 +13,7 @@ import com.revshop.util.DBConnection;
 
 public class cartDAO {
 
-    // ================= ADD TO CART =================
+ 
     public void addToCart(int userId, int productId, int quantity) {
 
         Connection con = null;
@@ -66,7 +66,7 @@ public class cartDAO {
         }
     }
 
-    // ================= VIEW CART =================
+ 
     public void viewCart(int userId) {
 
         Connection con = null;
@@ -122,7 +122,7 @@ public class cartDAO {
         }
     }
 
-    // ================= GET CART ITEMS (FOR ORDER) =================
+    
     public List<CartItem> getCartItems(int userId, Connection con)
             throws SQLException {
 
@@ -158,7 +158,7 @@ public class cartDAO {
         return items;
     }
 
-    // ================= REMOVE FROM CART =================
+    
     public void removeFromCart(int userId, int productId) {
 
         Connection con = null;
@@ -188,7 +188,7 @@ public class cartDAO {
         }
     }
 
-    // ================= CLEAR CART =================
+    
     public void clearCart(int userId, Connection con) throws SQLException {
 
         String sql = "DELETE FROM cart WHERE user_id = ?";

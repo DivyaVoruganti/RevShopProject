@@ -1,0 +1,62 @@
+package com.revshop.service;
+
+import com.revshop.dao.CartDAO;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
+public class CartService {
+
+    private static final Logger logger =
+            Logger.getLogger(CartService.class);
+
+    private CartDAO cartDAO = new CartDAO();
+    private ProductDAO productDAO = new ProductDAO();
+
+    // ADD TO CART
+    public boolean addProductWithStockCheck(
+            int userId, int productId, int quantity) {
+
+        int stock = productDAO.getAvailableStock(productId);
+
+        if (stock <= 0) {
+            System.out.println("Out of stock");
+            return false;
+        }
+
+        if (quantity > stock) {
+            System.out.println("Only " + stock + " items available");
+            return false;
+        }
+
+        cartDAO.addToCart(userId, productId, quantity);
+        return true;
+    }
+
+    // VIEW CART
+    public void viewCart(int userId) {
+        try (Connection con = DBConnection.getConnection()) {
+
+            List<CartItem> items = cartDAO.getCartItems(userId, con);
+
+            if (items.isEmpty()) {
+                System.out.println("Cart empty");
+                return;
+            }
+
+            for (CartItem item : items) {
+                System.out.println(
+                        item.getProductId() + " | Qty: " + item.getQuantity()
+                );
+            }
+
+        } catch (SQLException e) {
+            logger.error("View cart failed", e);
+        }
+    }
+}

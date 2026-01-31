@@ -1,0 +1,192 @@
+package com.revshop.service;
+
+import java.util.Scanner;
+
+import org.apache.log4j.Logger;
+
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.Product;
+
+public class SellerService {
+
+    private static final Logger logger =
+            Logger.getLogger(SellerService.class);
+
+    private ProductDAO productDAO = new ProductDAO();
+
+    // ================= SELLER MENU =================
+    public void sellerMenu(int sellerId, Scanner sc) {
+
+        boolean logout = false;
+
+        while (!logout) {
+
+            System.out.println("\n===== SELLER MENU =====");
+            System.out.println("1. View My Products");
+            System.out.println("2. Add Product");
+            System.out.println("3. Update Product");
+            System.out.println("4. Update Product Price");
+            System.out.println("5. Delete Product");
+            System.out.println("6. View Product Reviews");
+            System.out.println("7. Set Inventory Threshold");
+            System.out.println("8. Check Low Stock Alerts");
+            System.out.println("9. Logout");
+            System.out.print("Choice: ");
+
+            int choice;
+            try {
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid number.");
+                continue;
+            }
+
+            switch (choice) {
+
+                case 1:
+                    productDAO.getProductsBySeller(sellerId);
+                    break;
+
+                case 2:
+                    addProduct(sc, sellerId);
+                    break;
+
+                case 3:
+                    updateProduct(sc, sellerId);
+                    break;
+
+                case 4:
+                    updateProductPrice(sc, sellerId);
+                    break;
+
+                case 5:
+                    deleteProduct(sc, sellerId);
+                    break;
+
+                case 6:
+                    productDAO.viewProductReviewsBySeller(sellerId);
+                    break;
+
+                case 7:
+                    setInventoryThreshold(sc, sellerId);
+                    break;
+
+                case 8:
+                    productDAO.checkLowStock(sellerId);
+                    break;
+
+                case 9:
+                    System.out.println("Logging out...");
+                    logout = true;
+                    break;
+
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+    // ================= ADD PRODUCT =================
+    private void addProduct(Scanner sc, int sellerId) {
+
+        Product product = new Product();
+
+        System.out.print("Product Name: ");
+        product.setName(sc.nextLine());
+
+        System.out.print("MRP: ");
+        product.setMrp(Double.parseDouble(sc.nextLine()));
+
+        System.out.print("Discount Price: ");
+        product.setDiscountPrice(Double.parseDouble(sc.nextLine()));
+
+        System.out.print("Stock: ");
+        product.setStock(Integer.parseInt(sc.nextLine()));
+
+        System.out.print("Category: ");
+        product.setCategory(sc.nextLine());
+
+        System.out.print("Description: ");
+        product.setDescription(sc.nextLine());
+
+        product.setSellerId(sellerId);
+
+        productDAO.addProduct(product);
+        logger.info("Product added by sellerId=" + sellerId);
+    }
+
+    // ================= UPDATE PRODUCT =================
+    private void updateProduct(Scanner sc, int sellerId) {
+
+        Product product = new Product();
+
+        System.out.print("Product ID: ");
+        product.setProductId(Integer.parseInt(sc.nextLine()));
+
+        System.out.print("New Name: ");
+        product.setName(sc.nextLine());
+
+        System.out.print("New MRP: ");
+        product.setMrp(Double.parseDouble(sc.nextLine()));
+
+        System.out.print("New Discount Price: ");
+        product.setDiscountPrice(Double.parseDouble(sc.nextLine()));
+
+        System.out.print("New Stock: ");
+        product.setStock(Integer.parseInt(sc.nextLine()));
+
+        System.out.print("New Category: ");
+        product.setCategory(sc.nextLine());
+
+        System.out.print("New Description: ");
+        product.setDescription(sc.nextLine());
+
+        product.setSellerId(sellerId);
+
+        productDAO.updateProduct(product);
+        logger.info("Product updated by sellerId=" + sellerId);
+    }
+
+    // ================= UPDATE PRICE =================
+    private void updateProductPrice(Scanner sc, int sellerId) {
+
+        Product product = new Product();
+
+        System.out.print("Product ID: ");
+        product.setProductId(Integer.parseInt(sc.nextLine()));
+
+        System.out.print("New MRP: ");
+        product.setMrp(Double.parseDouble(sc.nextLine()));
+
+        System.out.print("New Discount Price: ");
+        product.setDiscountPrice(Double.parseDouble(sc.nextLine()));
+
+        product.setSellerId(sellerId);
+
+        productDAO.updateProductPrice(product);
+        logger.info("Product price updated by sellerId=" + sellerId);
+    }
+
+    // ================= DELETE PRODUCT =================
+    private void deleteProduct(Scanner sc, int sellerId) {
+
+        System.out.print("Product ID: ");
+        int productId = Integer.parseInt(sc.nextLine());
+
+        productDAO.deleteProduct(productId, sellerId);
+        logger.info("Product deleted by sellerId=" + sellerId);
+    }
+
+    // ================= INVENTORY THRESHOLD =================
+    private void setInventoryThreshold(Scanner sc, int sellerId) {
+
+        System.out.print("Product ID: ");
+        int productId = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Stock Threshold: ");
+        int threshold = Integer.parseInt(sc.nextLine());
+
+        productDAO.updateStockThreshold(productId, sellerId, threshold);
+        logger.info("Stock threshold updated by sellerId=" + sellerId);
+    }
+}

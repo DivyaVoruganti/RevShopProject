@@ -21,14 +21,11 @@ public class UserValidations {
 
     @Before
     public void setUp() {
-        // Initialize mocks
         MockitoAnnotations.initMocks(this);
     }
 
-    /* ================== REGISTER ================== */
     @Test
     public void testRegister_Success() {
-        // Mock DAO response
         when(userDAO.register("Alice", "alice@example.com", "pass123", "buyer")).thenReturn(true);
 
         boolean result = userService.register("Alice", "alice@example.com", "pass123", "buyer");
@@ -47,7 +44,6 @@ public class UserValidations {
         verify(userDAO).register("Bob", "bob@example.com", "pass123", "seller");
     }
 
-    /* ================== CHANGE PASSWORD ================== */
     @Test
     public void testChangePassword_Success() {
         when(userDAO.changePassword("alice@example.com", "newpass")).thenReturn(true);
@@ -68,7 +64,6 @@ public class UserValidations {
         verify(userDAO).changePassword("bob@example.com", "newpass");
     }
 
-    /* ================== LOGIN ================== */
     @Test
     public void testLogin_Success() {
         when(userDAO.loginAndGetRole("alice@example.com", "pass123")).thenReturn("buyer");

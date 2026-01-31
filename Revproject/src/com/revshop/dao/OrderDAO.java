@@ -117,7 +117,4 @@ public class OrderDAO {
 	        con.close();
 	    }
 
-	   
-
-
 }

@@ -1,0 +1,37 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.SQLException;
+import com.revshop.dao.ProductDAO;
+
+public class ProductService {
+
+    private static final Logger logger =
+            Logger.getLogger(ProductService.class);
+
+    private ProductDAO productDAO;
+
+    public ProductService() {
+        this.productDAO = new ProductDAO();
+        logger.info("ProductService initialized");
+    }
+
+    // View products by seller
+    public void viewAllProducts(int sellerId) throws SQLException {
+        logger.info("Viewing products for sellerId: " + sellerId);
+        productDAO.getProductsBySeller(sellerId);
+    }
+
+    // View all products (buyer / guest)
+    public void viewAllProducts() throws SQLException {
+        logger.info("Viewing all products");
+        productDAO.viewAllProducts();
+    }
+
+    // Search products
+    public void searchProducts(String keyword) throws SQLException {
+        logger.info("Searching products with keyword: " + keyword);
+        productDAO.searchByKeyword(keyword);
+    }
+}

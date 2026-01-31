@@ -1,0 +1,78 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import com.revshop.dao.PaymentDAO;
+
+public class PaymentService {
+
+    private static final Logger logger =
+            Logger.getLogger(PaymentService.class);
+
+    private PaymentDAO dao = new PaymentDAO();
+    private Scanner sc = new Scanner(System.in);
+
+    public void makePayment(int userId) throws SQLException {
+
+        logger.info("Starting payment process for userId: " + userId);
+
+        int orderId = dao.getLatestOrderId(userId);
+
+        if (orderId == 0) {
+            logger.warn("No orders found for payment. userId: " + userId);
+            System.out.println("No orders found to make payment.");
+            return;
+        }
+
+        System.out.println("\n===== PAYMENT =====");
+        System.out.println("1. Credit/Debit Card");
+        System.out.println("2. UPI");
+        System.out.println("3. Cash on Delivery");
+        System.out.print("Choose payment method: ");
+
+        int choice = Integer.parseInt(sc.nextLine());
+        String method = "";
+
+        logger.info("Payment option selected: " + choice +
+                    " for orderId: " + orderId);
+
+        switch (choice) {
+
+            case 1:
+                method = "CARD";
+                System.out.print("Enter Card Number: ");
+                sc.nextLine();
+                logger.info("Processing CARD payment for orderId: " + orderId);
+                break;
+
+            case 2:
+                method = "UPI";
+                System.out.print("Enter UPI ID: ");
+                sc.nextLine();
+                logger.info("Processing UPI payment for orderId: " + orderId);
+                break;
+
+            case 3:
+                method = "COD";
+                logger.info("Cash on Delivery selected for orderId: " + orderId);
+                break;
+
+            default:
+                logger.warn("Invalid payment option selected: " + choice +
+                            " for userId: " + userId);
+                System.out.println("Invalid payment option.");
+                return;
+        }
+
+        dao.updatePayment(orderId, method);
+
+        logger.info("Payment successful. orderId=" + orderId +
+                    ", method=" + method);
+
+        System.out.println("Payment successful!");
+        System.out.println("Order ID " + orderId + " marked as PAID.");
+    }
+}

@@ -1,0 +1,134 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Scanner;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+
+public class CheckoutService {
+
+    private static final Logger logger = Logger.getLogger(CheckoutService.class);
+
+    private cartDAO cartDao1 = new cartDAO();
+    private CartService cartService = new CartService();
+    private NotificationService notificationService = new NotificationService();
+    private Scanner sc = new Scanner(System.in);
+
+    public void clearCart(int userId) throws SQLException {
+        logger.info("Clearing cart for userId: " + userId);
+
+        Connection con = DBConnection.getConnection();
+        String sql = "DELETE FROM cart WHERE user_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+        ps.executeUpdate();
+
+        logger.info("Cart cleared for userId: " + userId);
+    }
+
+    public void checkout(int userId) {
+        Connection con = null;
+
+        try {
+            logger.info("Checkout started for userId: " + userId);
+
+            con = DBConnection.getConnection();
+            con.setAutoCommit(false);
+
+            logger.info("Displaying cart for checkout");
+            cartDao1.viewCart(userId);
+
+            sc.nextLine(); // consume newline
+            logger.info("Collecting shipping and billing address");
+
+            System.out.print("Enter shipping address: ");
+            String shipping = sc.nextLine();
+
+            System.out.print("Enter billing address: ");
+            String billing = sc.nextLine();
+
+            List<CartItem> cartItems = cartDao1.getCartItems(userId, con);
+
+            if (cartItems.isEmpty()) {
+                logger.warn("Checkout failed: cart is empty for userId: " + userId);
+                return;
+            }
+
+            double total = 0;
+            for (CartItem item : cartItems) {
+                total += item.getQuantity() * item.getPrice();
+            }
+
+            logger.info("Total amount calculated: " + total);
+
+            String orderSql =
+                "INSERT INTO orders (user_id, total_amount, shipping_address, billing_address) " +
+                "VALUES (?, ?, ?, ?)";
+
+            PreparedStatement orderPs =
+                con.prepareStatement(orderSql, new String[]{"order_id"});
+
+            orderPs.setInt(1, userId);
+            orderPs.setDouble(2, total);
+            orderPs.setString(3, shipping);
+            orderPs.setString(4, billing);
+            orderPs.executeUpdate();
+
+            ResultSet orderKeys = orderPs.getGeneratedKeys();
+            orderKeys.next();
+            int orderId = orderKeys.getInt(1);
+
+            logger.info("Order created successfully. OrderId: " + orderId);
+
+            String itemSql =
+                "INSERT INTO order_items (order_id, product_id, quantity, price) " +
+                "VALUES (?, ?, ?, ?)";
+
+            PreparedStatement itemPs = con.prepareStatement(itemSql);
+
+            for (CartItem item : cartItems) {
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, item.getProductId());
+                itemPs.setInt(3, item.getQuantity());
+                itemPs.setDouble(4, item.getPrice());
+                itemPs.addBatch();
+            }
+
+            itemPs.executeBatch();
+            logger.info("Order items inserted for orderId: " + orderId);
+
+            cartDao1.clearCart(userId, con);
+            logger.info("Cart cleared after checkout for userId: " + userId);
+
+            con.commit();
+
+            logger.info("Checkout completed successfully for userId: " + userId +
+                        ", OrderId: " + orderId +
+                        ", Total: " + total);
+
+        } catch (Exception e) {
+            logger.error("Checkout failed for userId: " + userId, e);
+
+            try {
+                if (con != null) con.rollback();
+            } catch (SQLException ex) {
+                logger.error("Rollback failed for userId: " + userId, ex);
+            }
+
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                logger.error("Error closing DB connection during checkout", ex);
+            }
+        }
+    }
+}

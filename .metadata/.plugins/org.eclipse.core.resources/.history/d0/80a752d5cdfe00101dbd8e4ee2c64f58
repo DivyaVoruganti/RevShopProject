@@ -1,0 +1,81 @@
+package com.revshop.dao;
+
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+import org.apache.log4j.Logger;
+
+import java.sql.*;
+
+public class ProductDAO {
+
+    private static final Logger logger =
+            Logger.getLogger(ProductDAO.class);
+
+    // ================= GET STOCK =================
+    public int getAvailableStock(int productId) {
+
+        String sql = "SELECT stock FROM products WHERE product_id=?";
+        int stock = 0;
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    stock = rs.getInt("stock");
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting stock", e);
+        }
+        return stock;
+    }
+
+    // ================= VIEW ALL =================
+    public void viewAllProducts() {
+
+        String sql = "SELECT product_id, name, price FROM products";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("product_id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getDouble("price")
+                );
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+    }
+
+    // ================= SELLER PRODUCTS =================
+    public void getProductsBySeller(int sellerId) {
+
+        String sql =
+                "SELECT product_id, name FROM products WHERE seller_id=?";
+
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getInt("product_id") + " | " +
+                            rs.getString("name")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+    }
+}

@@ -1,0 +1,95 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import com.revshop.dao.CartDAO;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+
+public class CartService {
+
+    private static final Logger logger =
+            Logger.getLogger(CartService.class);
+
+    private CartDAO cartDAO = new CartDAO();
+    private ProductDAO productDAO = new ProductDAO();
+    private NotificationService notificationService =
+            new NotificationService();
+
+    // ================= ADD TO CART =================
+    public boolean addProductWithStockCheck(
+            int userId, int productId, int quantity) {
+
+        int availableStock =
+                productDAO.getAvailableStock(productId);
+
+        if (availableStock <= 0) {
+            logger.info("Product out of stock!");
+            return false;
+        }
+
+        if (quantity > availableStock) {
+            logger.info("Only " + availableStock + " items available.");
+            return false;
+        }
+
+        cartDAO.addToCart(userId, productId, quantity);
+        logger.info("Product added to cart!");
+        return true;
+    }
+
+    // ================= VIEW CART =================
+    public void viewCart(int userId) {
+
+        try (Connection con = DBConnection.getConnection()) {
+
+            List<CartItem> cartItems =
+                    cartDAO.getCartItems(userId, con);
+
+            if (cartItems.isEmpty()) {
+                logger.info("Your cart is empty!");
+                return;
+            }
+
+            for (CartItem item : cartItems) {
+                double price =
+                        getProductPrice(item.getProductId(), con);
+                double total =
+                        price * item.getQuantity();
+
+                System.out.println(
+                        item.getProductId() + " | " +
+                        item.getQuantity() + " | " +
+                        price + " | " +
+                        total
+                );
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching cart", e);
+        }
+    }
+
+    // ================= HELPERS =================
+    private double getProductPrice(
+            int productId, Connection con)
+            throws SQLException {
+
+        String sql =
+                "SELECT price FROM products WHERE product_id=?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getDouble("price");
+            }
+        }
+        return 0;
+    }
+}

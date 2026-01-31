@@ -1,0 +1,420 @@
+package com.revshop.service;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+
+public class CartService {
+
+    private static final Logger logger = LogManager.getLogger(CartService.class);
+
+    private cartDAO cartDAO = new cartDAO();
+    private ProductDAO productDAO = new ProductDAO();
+    private NotificationService notificationService = new NotificationService();
+
+    // ================= ADD TO CART WITH STOCK CHECK =================
+    public boolean addProductWithStockCheck(int userId, int productId, int quantity) {
+
+        int availableStock = productDAO.getAvailableStock(productId);
+
+        if (availableStock == -1) {
+            logger.error("Error while checking stock for productId: {}", productId);
+            return false;
+        }
+
+        if (availableStock <= 0) {
+            logger.warn("Product {} is out of stock", productId);
+            return false;
+        }
+
+        if (quantity > availableStock) {
+            logger.warn("Requested quantity {} exceeds available stock {} for product {}",
+                    quantity, availableStock, productId);
+            return false;
+        }
+
+        cartDAO.addToCart(userId, productId, quantity);
+        logger.info("Product {} added to cart for user {}", productId, userId);
+        return true;
+    }
+
+    // ================= VIEW CART =================
+    public void viewCart(int userId) {
+
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            List<CartItem> cartItems = cartDAO.getCartItems(userId, con);
+
+            if (cartItems.isEmpty()) {
+                logger.info("Cart is empty for user {}", userId);
+                return;
+            }
+
+            logger.info("Viewing cart for user {}", userId);
+
+            for (CartItem item : cartItems) {
+                double price = getProductPrice(item.getProductId(), con);
+                double total = price * item.getQuantity();
+
+                logger.info("ProductId: {}, Quantity: {}, Price: {}, Total: {}",
+                        item.getProductId(), item.getQuantity(), price, total);
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching cart for user {}", userId, e);
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection", e);
+            }
+        }
+    }
+
+    // ================= REMOVE PRODUCT FROM CART =================
+    public void removeProduct(int userId, int productId) {
+        cartDAO.removeFromCart(userId, productId);
+        logger.info("Removed product {} from cart for user {}", productId, userId);
+    }
+
+    // ================= PLACE ORDER =================
+    public void placeOrder(int buyerId) {
+
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            con.setAutoCommit(false);
+
+            String orderSql = "INSERT INTO orders (user_id, order_date) VALUES (?, SYSDATE)";
+            PreparedStatement orderPs = con.prepareStatement(orderSql, new String[]{"order_id"});
+            orderPs.setInt(1, buyerId);
+            orderPs.executeUpdate();
+
+            ResultSet rs = orderPs.getGeneratedKeys();
+            int orderId = 0;
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
+
+            rs.close();
+            orderPs.close();
+
+            List<CartItem> cartItems = cartDAO.getCartItems(buyerId, con);
+
+            for (CartItem item : cartItems) {
+
+                double price = getProductPrice(item.getProductId(), con);
+
+                String itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+                PreparedStatement itemPs = con.prepareStatement(itemSql);
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, item.getProductId());
+                itemPs.setInt(3, item.getQuantity());
+                itemPs.setDouble(4, price);
+                itemPs.executeUpdate();
+                itemPs.close();
+
+                int sellerId = getSellerIdByProduct(item.getProductId(), con);
+                notificationService.notifySeller(
+                        sellerId,
+                        "New order received for product ID: " + item.getProductId()
+                );
+            }
+
+            notificationService.notifyBuyer(buyerId, "Your order has been placed successfully");
+            cartDAO.clearCart(buyerId, con);
+
+            con.commit();
+            logger.info("Order {} placed successfully for buyer {}", orderId, buyerId);
+
+        } catch (SQLException e) {
+            try {
+                if (con != null) con.rollback();
+            } catch (SQLException ex) {
+                logger.error("Rollback failed", ex);
+            }
+            logger.error("Error placing order for buyer {}", buyerId, e);
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection", e);
+            }
+        }
+    }
+
+    // ================= FETCH PRODUCT PRICE =================
+    private double getProductPrice(int productId, Connection con) throws SQLException {
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        double price = 0;
+
+        try {
+            String sql = "SELECT price FROM products WHERE product_id=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                price = rs.getDouble("price");
+            }
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {
+                logger.error("Error closing ResultSet", e);
+            }
+            try { if (ps != null) ps.close(); } catch (SQLException e) {
+                logger.error("Error closing PreparedStatement", e);
+            }
+  apackage com.revshop.service;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+
+public class CartService {
+
+    private static final Logger logger = LogManager.getLogger(CartService.class);
+
+    private cartDAO cartDAO = new cartDAO();
+    private ProductDAO productDAO = new ProductDAO();
+    private NotificationService notificationService = new NotificationService();
+
+    // ================= ADD TO CART WITH STOCK CHECK =================
+    public boolean addProductWithStockCheck(int userId, int productId, int quantity) {
+
+        int availableStock = productDAO.getAvailableStock(productId);
+
+        if (availableStock == -1) {
+            logger.error("Error while checking stock for productId: {}", productId);
+            return false;
+        }
+
+        if (availableStock <= 0) {
+            logger.warn("Product {} is out of stock", productId);
+            return false;
+        }
+
+        if (quantity > availableStock) {
+            logger.warn("Requested quantity {} exceeds available stock {} for product {}",
+                    quantity, availableStock, productId);
+            return false;
+        }
+
+        cartDAO.addToCart(userId, productId, quantity);
+        logger.info("Product {} added to cart for user {}", productId, userId);
+        return true;
+    }
+
+    // ================= VIEW CART =================
+    public void viewCart(int userId) {
+
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            List<CartItem> cartItems = cartDAO.getCartItems(userId, con);
+
+            if (cartItems.isEmpty()) {
+                logger.info("Cart is empty for user {}", userId);
+                return;
+            }
+
+            logger.info("Viewing cart for user {}", userId);
+
+            for (CartItem item : cartItems) {
+                double price = getProductPrice(item.getProductId(), con);
+                double total = price * item.getQuantity();
+
+                logger.info("ProductId: {}, Quantity: {}, Price: {}, Total: {}",
+                        item.getProductId(), item.getQuantity(), price, total);
+            }
+
+        } catch (SQLException e) {
+            logger.error("Error fetching cart for user {}", userId, e);
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection", e);
+            }
+        }
+    }
+
+    // ================= REMOVE PRODUCT FROM CART =================
+    public void removeProduct(int userId, int productId) {
+        cartDAO.removeFromCart(userId, productId);
+        logger.info("Removed product {} from cart for user {}", productId, userId);
+    }
+
+    // ================= PLACE ORDER =================
+    public void placeOrder(int buyerId) {
+
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            con.setAutoCommit(false);
+
+            String orderSql = "INSERT INTO orders (user_id, order_date) VALUES (?, SYSDATE)";
+            PreparedStatement orderPs = con.prepareStatement(orderSql, new String[]{"order_id"});
+            orderPs.setInt(1, buyerId);
+            orderPs.executeUpdate();
+
+            ResultSet rs = orderPs.getGeneratedKeys();
+            int orderId = 0;
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
+
+            rs.close();
+            orderPs.close();
+
+            List<CartItem> cartItems = cartDAO.getCartItems(buyerId, con);
+
+            for (CartItem item : cartItems) {
+
+                double price = getProductPrice(item.getProductId(), con);
+
+                String itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+                PreparedStatement itemPs = con.prepareStatement(itemSql);
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, item.getProductId());
+                itemPs.setInt(3, item.getQuantity());
+                itemPs.setDouble(4, price);
+                itemPs.executeUpdate();
+                itemPs.close();
+
+                int sellerId = getSellerIdByProduct(item.getProductId(), con);
+                notificationService.notifySeller(
+                        sellerId,
+                        "New order received for product ID: " + item.getProductId()
+                );
+            }
+
+            notificationService.notifyBuyer(buyerId, "Your order has been placed successfully");
+            cartDAO.clearCart(buyerId, con);
+
+            con.commit();
+            logger.info("Order {} placed successfully for buyer {}", orderId, buyerId);
+
+        } catch (SQLException e) {
+            try {
+                if (con != null) con.rollback();
+            } catch (SQLException ex) {
+                logger.error("Rollback failed", ex);
+            }
+            logger.error("Error placing order for buyer {}", buyerId, e);
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                logger.error("Error closing DB connection", e);
+            }
+        }
+    }
+
+    // ================= FETCH PRODUCT PRICE =================
+    private double getProductPrice(int productId, Connection con) throws SQLException {
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        double price = 0;
+
+        try {
+            String sql = "SELECT price FROM products WHERE product_id=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                price = rs.getDouble("price");
+            }
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {
+                logger.error("Error closing ResultSet", e);
+            }
+            try { if (ps != null) ps.close(); } catch (SQLException e) {
+                logger.error("Error closing PreparedStatement", e);
+            }
+        }
+        return price;
+    }
+
+    // ================= FETCH SELLER ID =================
+    private int getSellerIdByProduct(int productId, Connection con) throws SQLException {
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int sellerId = 0;
+
+        try {
+            String sql = "SELECT seller_id FROM products WHERE product_id=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                sellerId = rs.getInt("seller_id");
+            }
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {
+                logger.error("Error closing ResultSet", e);
+            }
+            try { if (ps != null) ps.close(); } catch (SQLException e) {
+                logger.error("Error closing PreparedStatement", e);
+            }
+        }
+        return sellerId;
+    }
+}
+      }
+        return price;
+    }
+
+    // ================= FETCH SELLER ID =================
+    private int getSellerIdByProduct(int productId, Connection con) throws SQLException {
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int sellerId = 0;
+
+        try {
+            String sql = "SELECT seller_id FROM products WHERE product_id=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                sellerId = rs.getInt("seller_id");
+            }
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) {
+                logger.error("Error closing ResultSet", e);
+            }
+            try { if (ps != null) ps.close(); } catch (SQLException e) {
+                logger.error("Error closing PreparedStatement", e);
+            }
+        }
+        return sellerId;
+    }
+}

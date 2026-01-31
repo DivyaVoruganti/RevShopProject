@@ -1,0 +1,68 @@
+package com.revshop.service;
+
+import org.apache.log4j.Logger;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import com.revshop.dao.FavoriteDAO;
+
+public class FavoritesService {
+
+    private static final Logger logger = Logger.getLogger(FavoritesService.class);
+
+    private FavoriteDAO dao = new FavoriteDAO();
+    private Scanner sc = new Scanner(System.in);
+
+    public void favoritesMenu(int userId) throws SQLException {
+
+        logger.info("Favorites menu opened for userId: " + userId);
+
+        while (true) {
+
+            logger.info("Displaying favorites menu options");
+
+            System.out.println("\n===== FAVORITES MENU =====");
+            System.out.println("1. Add Product to Favorites");
+            System.out.println("2. View Favorites");
+            System.out.println("3. Remove Product from Favorites");
+            System.out.println("4. Back to Main Menu");
+            System.out.print("Choice: ");
+
+            int choice = sc.nextInt();
+            logger.info("User selected option: " + choice);
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Enter Product ID to favorite: ");
+                    int addId = sc.nextInt();
+                    logger.info("Adding product to favorites. userId=" + userId +
+                                ", productId=" + addId);
+                    dao.addToFavorites(userId, addId);
+                    break;
+
+                case 2:
+                    logger.info("Viewing favorites for userId: " + userId);
+                    dao.viewFavorites(userId);
+                    break;
+
+                case 3:
+                    System.out.print("Enter Product ID to remove: ");
+                    int removeId = sc.nextInt();
+                    logger.info("Removing product from favorites. userId=" + userId +
+                                ", productId=" + removeId);
+                    dao.removeFromFavorites(userId, removeId);
+                    break;
+
+                case 4:
+                    logger.info("Exiting favorites menu for userId: " + userId);
+                    return;
+
+                default:
+                    logger.warn("Invalid favorites menu choice: " + choice +
+                                " for userId: " + userId);
+            }
+        }
+    }
+}
