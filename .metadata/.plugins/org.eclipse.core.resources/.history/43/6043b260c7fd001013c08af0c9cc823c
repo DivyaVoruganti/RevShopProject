@@ -1,0 +1,143 @@
+package com.revshop.service;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.model.CartItem;
+import com.revshop.util.DBConnection;
+
+public class CartService {
+
+    private cartDAO cartDAO = new cartDAO();
+    private NotificationService notificationService = new NotificationService();
+
+  
+    public void addProduct(int userId, int productId, int quantity) {
+        cartDAO.addToCart(userId, productId, quantity);
+    }
+
+   
+    public void viewCart(int userId) throws SQLException {
+
+        Connection con = DBConnection.getConnection();
+        List<CartItem> cartItems = cartDAO.getCartItems(userId, con);
+        con.close();
+
+        if (cartItems.isEmpty()) {
+            System.out.println("Your cart is empty!");
+            return;
+        }
+
+        System.out.println("ProductID | Quantity | Price | Total");
+
+        for (CartItem item : cartItems) {
+            double total = item.getQuantity() * item.getPrice();
+            System.out.println(
+                item.getProductId() + " | " +
+                item.getQuantity() + " | " +
+                item.getPrice() + " | " +
+                total
+            );
+        }
+    }
+
+   
+    public void removeProduct(int userId, int productId) {
+        cartDAO.removeFromCart(userId, productId);
+    }
+
+   
+    public void placeOrder(int buyerId) throws SQLException {
+
+        Connection con = DBConnection.getConnection();
+        con.setAutoCommit(false);
+
+        try {
+            
+            String orderSql =
+                "INSERT INTO orders (user_id, order_date) VALUES (?, SYSDATE)";
+
+            PreparedStatement orderPs =
+                con.prepareStatement(orderSql, new String[] { "order_id" });
+
+            orderPs.setInt(1, buyerId);
+            orderPs.executeUpdate();
+
+            ResultSet rs = orderPs.getGeneratedKeys();
+            int orderId = 0;
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
+
+            rs.close();
+            orderPs.close();
+
+           
+            List<CartItem> cartItems = cartDAO.getCartItems(buyerId, con);
+
+            for (CartItem item : cartItems) {
+
+                String itemSql =
+                    "INSERT INTO order_items " +
+                    "(order_id, product_id, quantity, price) " +
+                    "VALUES (?, ?, ?, ?)";
+
+                PreparedStatement itemPs = con.prepareStatement(itemSql);
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, item.getProductId());
+                itemPs.setInt(3, item.getQuantity());
+                itemPs.setDouble(4, item.getPrice());
+                itemPs.executeUpdate();
+                itemPs.close();
+
+                int sellerId = getSellerIdByProduct(item.getProductId(), con);
+
+                notificationService.notifySeller(
+                    sellerId,
+                    "New order received for your product"
+                );
+            }
+
+            notificationService.notifyBuyer(
+                buyerId,
+                "Your order has been placed successfully"
+            );
+
+            cartDAO.clearCart(buyerId, con);
+
+            con.commit();
+            System.out.println("Order placed successfully!");
+
+        } catch (Exception e) {
+            con.rollback();
+            e.printStackTrace();
+        } finally {
+            con.close();
+        }
+    }
+
+   
+    private int getSellerIdByProduct(int productId, Connection con)
+            throws SQLException {
+
+        String sql =
+            "SELECT seller_id FROM products WHERE product_id=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, productId);
+
+        ResultSet rs = ps.executeQuery();
+        int sellerId = 0;
+        if (rs.next()) {
+            sellerId = rs.getInt("seller_id");
+        }
+
+        rs.close();
+        ps.close();
+        return sellerId;
+    }
+}

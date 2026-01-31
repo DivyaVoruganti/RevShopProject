@@ -1,0 +1,56 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.ReviewDAO;
+
+public class ReviewServiceTest {
+
+    @Mock
+    private ReviewDAO dao;
+
+    @InjectMocks
+    private ReviewService reviewService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+    @Test
+    public void testReviewProduct_Success() throws SQLException {
+
+        int userId = 1;
+
+        
+        String input = "101\n5\nExcellent product\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        when(dao.hasPurchased(userId, 101)).thenReturn(true);
+
+        reviewService.reviewProduct(userId);
+
+        verify(dao).hasPurchased(userId, 101);
+        verify(dao).addReview(userId, 101, 5, "Excellent product");
+    }
+    @Test
+    public void testViewReviews() throws SQLException {
+
+        String input = "303\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        reviewService.viewReviews();
+
+        verify(dao).viewProductReviews(303);
+    }
+
+
+}

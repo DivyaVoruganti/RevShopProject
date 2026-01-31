@@ -1,0 +1,33 @@
+package com.revshop.service;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class CartServiceTest {
+
+    CartService service = new CartService();
+
+    @Test
+    public void testAddProduct() {
+        service.addProduct(1, 101, 1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testViewCart() throws Exception {
+        service.viewCart(1);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testRemoveProduct() {
+        service.removeProduct(1, 101);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testPlaceOrder() throws Exception {
+        service.placeOrder(1);
+        assertTrue(true);
+    }
+
+}

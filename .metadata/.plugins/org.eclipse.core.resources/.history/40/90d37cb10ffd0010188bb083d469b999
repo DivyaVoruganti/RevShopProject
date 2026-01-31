@@ -1,0 +1,191 @@
+
+
+package com.revshop.service;
+
+import java.sql.*;
+import java.util.List;
+
+import com.revshop.util.DBConnection;
+import com.revshop.dao.cartDAO;
+import com.revshop.model.CartItem;
+
+public class CartService {
+
+    private cartDAO cartDAO1 = new cartDAO();
+    private NotificationService notificationService = new NotificationService();
+    
+    public void addProduct(int userId, int productId, int quantity) throws SQLException {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = DBConnection.getConnection();
+
+            String sql = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ps.setInt(3, quantity);
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product added to cart!" : "Failed to add product.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        }
+    }
+    public void viewCart(int userId) throws SQLException {
+
+        List<CartItem> cartItems = getCartItems(userId);
+
+        if (cartItems.isEmpty()) {
+            System.out.println("Your cart is empty!");
+            return;
+        }
+
+        System.out.println("ProductID | Quantity | Price");
+        for (CartItem item : cartItems) {
+            System.out.println(item.getProductId() + " | " + item.getQuantity() + " | " + item.getPrice());
+        }
+    }
+
+    // Helper method to fetch CartItems
+    private List<CartItem> getCartItems(int userId) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        List<CartItem> items = new java.util.ArrayList<CartItem>();
+
+        String sql = "SELECT product_id, quantity, price FROM cart WHERE user_id=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, userId);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            CartItem item = new CartItem(
+                    rs.getInt("product_id"),
+                    rs.getInt("quantity"),
+                    rs.getDouble("price")
+            );
+            items.add(item);
+        }
+
+        rs.close();
+        ps.close();
+        con.close();
+
+        return items;
+    }
+    
+    public void removeProduct(int userId, int productId) throws SQLException {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = DBConnection.getConnection();
+            String sql = "DELETE FROM cart WHERE user_id=? AND product_id=?";
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product removed from cart!" : "Product not found in cart.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        }
+    }
+
+    public void placeOrder(int buyerId) throws SQLException {
+
+        Connection con = DBConnection.getConnection();
+        con.setAutoCommit(false); 
+
+        try {
+           
+            String orderSql = "INSERT INTO orders (user_id, order_date) VALUES (?, SYSDATE)";
+            PreparedStatement orderPs =
+                    con.prepareStatement(orderSql, new String[]{"order_id"});
+
+            orderPs.setInt(1, buyerId);
+            orderPs.executeUpdate();
+
+            // get generated order_id
+            ResultSet rs = orderPs.getGeneratedKeys();
+            int orderId = 0;
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
+
+           
+            List<CartItem> cartItems = cartDAO1.getCartItems(buyerId, con);
+
+            
+            for (CartItem item : cartItems) {
+
+                String itemSql =
+                        "INSERT INTO order_items (order_id, product_id, quantity, price) " +
+                        "VALUES (?, ?, ?, ?)";
+
+                PreparedStatement itemPs = con.prepareStatement(itemSql);
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, item.getProductId());
+                itemPs.setInt(3, item.getQuantity());
+                itemPs.setDouble(4, item.getPrice());
+                itemPs.executeUpdate();
+
+                
+                int sellerId = getSellerIdByProduct(item.getProductId(), con);
+
+                notificationService.notifySeller(
+                        sellerId,
+                        "New order received for your product"
+                );
+            }
+
+           
+            notificationService.notifyBuyer(
+                    buyerId,
+                    "Your order has been placed successfully"
+            );
+
+          
+            cartDAO1.clearCart(buyerId, con);
+
+            con.commit();
+            System.out.println("Order placed successfully!");
+
+        } catch (Exception e) {
+            con.rollback();
+            e.printStackTrace();
+        } finally {
+            con.close();
+        }
+    }
+
+   
+    private int getSellerIdByProduct(int productId, Connection con) throws SQLException {
+
+        String sql = "SELECT seller_id FROM products WHERE product_id=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, productId);
+
+        ResultSet rs = ps.executeQuery();
+        int sellerId = 0;
+        if (rs.next()) {
+            sellerId = rs.getInt("seller_id");
+        }
+
+        rs.close();
+        ps.close();
+        return sellerId;
+    }
+}

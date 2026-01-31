@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="NotificationValidations" project="Revproject" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="com.revshop.service.NotificationValidations" time="0.002">
+    <testcase name="testNotifyBuyer" classname="com.revshop.service.NotificationValidations" time="0.0"/>
+    <testcase name="testNotifySeller" classname="com.revshop.service.NotificationValidations" time="0.0"/>
+    <testcase name="testViewSellerNotifications" classname="com.revshop.service.NotificationValidations" time="0.001"/>
+    <testcase name="testViewBuyerNotifications" classname="com.revshop.service.NotificationValidations" time="0.001"/>
+  </testsuite>
+</testrun>

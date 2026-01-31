@@ -1,0 +1,22 @@
+package com.revshop.service;
+
+import com.revshop.dao.ProductDAO;
+
+public class ProductService {
+
+    private ProductDAO productDAO;
+
+    public ProductService() {
+        this.productDAO = new ProductDAO();
+    }
+
+    public void viewAllProducts(int sellerId) {
+        productDAO.viewProductsBySeller(sellerId);
+    }
+    public void searchByKeyword(String keyword) {
+        productDAO.searchProducts(keyword);
+    }
+    public void searchProducts(String keyword) {
+        productDAO.searchByKeyword(keyword);
+    }
+}

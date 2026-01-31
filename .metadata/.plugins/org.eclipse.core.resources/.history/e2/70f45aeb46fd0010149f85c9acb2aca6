@@ -1,0 +1,290 @@
+package com.revshop.dao;
+
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+
+import java.sql.*;
+
+public class ProductDAO {
+
+    /* ================= VIEW ALL PRODUCTS ================= */
+    public void viewAllProducts() {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql =
+            "SELECT product_id, name, price, discount_price, stock, category " +
+            "FROM products";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+
+    /* ================= SEARCH ================= */
+    public void searchByKeyword(String keyword) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql =
+            "SELECT product_id, name, price, discount_price, stock, category " +
+            "FROM products WHERE LOWER(name) LIKE ? OR LOWER(category) LIKE ?";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+
+            String value = "%" + keyword.toLowerCase() + "%";
+            ps.setString(1, value);
+            ps.setString(2, value);
+
+            rs = ps.executeQuery();
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+
+    /* ================= ADD PRODUCT ================= */
+    public void addProduct(Product product) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        String sql =
+            "INSERT INTO products " +
+            "(product_id, name, price, discount_price, stock, category, description, seller_id) " +
+            "VALUES (product_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1,product.getName());
+            ps.setDouble(2, product.getMrp());          
+            ps.setDouble(3, product.getDiscountPrice());
+            ps.setInt(4, product.getStock());
+            ps.setString(5, product.getCategory());
+            ps.setString(6, product.getDescription());
+            ps.setInt(7, product.getSellerId());
+
+            ps.executeUpdate();
+            System.out.println("Product added successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+    /* ================= VIEW PRODUCTS BY SELLER ================= */
+    public void getProductsBySeller(int sellerId) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT product_id, name, price, discount_price, stock, category " +
+                     "FROM products WHERE seller_id=?";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, sellerId);
+            rs = ps.executeQuery();
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    /* ================= DELETE PRODUCT ================= */
+    public void deleteProduct(int productId, int sellerId) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        String sql = "DELETE FROM products WHERE product_id=? AND seller_id=?";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ps.setInt(2, sellerId);
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product deleted!" : " Delete failed!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    
+
+    /* ================= UPDATE PRODUCT ================= */
+    public void updateProduct(Product product) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        String sql =
+            "UPDATE products SET name=?, price=?, discount_price=?, stock=?, category=?, description=? " +
+            "WHERE product_id=? AND seller_id=?";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setDouble(3, product.getDiscountPrice());
+            ps.setInt(4, product.getStock());
+            ps.setString(5, product.getCategory());
+            ps.setString(6, product.getDescription());
+            ps.setInt(7, product.getProductId());
+            ps.setInt(8, product.getSellerId());
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product updated!" : "Update failed!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+    public void updateProductPrice(Product product) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        String sql = "UPDATE products SET price=?, discount_price=? WHERE product_id=? AND seller_id=?";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+
+            ps.setDouble(1, product.getMrp());
+            ps.setDouble(2, product.getDiscountPrice());
+            ps.setInt(3, product.getProductId());
+            ps.setInt(4, product.getSellerId());
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product price updated!" : "Update failed!");
+
+        } finally {
+            try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+    public void viewProductReviewsBySeller(int sellerId) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT r.review_id, r.product_id, p.name AS product_name, r.user_id, r.rating, r.review_text, r.review_date "
+                   + "FROM reviews r JOIN products p ON r.product_id = p.product_id "
+                   + "WHERE p.seller_id=? ORDER BY r.review_date DESC";
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, sellerId);
+            rs = ps.executeQuery();
+
+            System.out.println("ReviewID | ProductID | Product Name | BuyerID | Rating | Review | Date");
+            System.out.println("-----------------------------------------------------------------------");
+            boolean hasReviews = false;
+
+            while (rs.next()) {
+                hasReviews = true;
+                System.out.println(
+                    rs.getInt("review_id") + " | " +
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("product_name") + " | " +
+                    rs.getInt("user_id") + " | " +
+                    rs.getDouble("rating") + " | " +
+                    rs.getString("review_text") + " | " +
+                    rs.getDate("review_date")
+                );
+            }
+
+            if (!hasReviews) {
+                System.out.println("No reviews found for your products.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (ps != null) ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+    
+
+}

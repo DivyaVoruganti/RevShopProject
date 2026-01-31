@@ -34,21 +34,45 @@ public class RevShopApp {
                 int choice = Integer.parseInt(sc.nextLine());
 
                 switch (choice) {
-                    case 1:
-                        System.out.print("Name: ");
-                        String name = sc.nextLine();
-                        System.out.print("Email: ");
-                        String email = sc.nextLine();
-                        System.out.print("Password: ");
-                        String pwd = sc.nextLine();
-                        System.out.print("Role (BUYER/SELLER): ");
-                        String role = sc.nextLine();
+                case 1:
+                    System.out.print("Name: ");
+                    String name = sc.nextLine();
 
-                        if (userService.register(name, email, pwd, role))
-                            System.out.println("Registered Successfully!");
-                        else
-                            System.out.println("Registration Failed!");
-                        break;
+                    
+                    if (name.matches(".*@.*")) {
+                        System.out.println("Error: Name cannot contain '@' or look like an email!");
+                        break; // skip registration
+                    }
+
+                    System.out.print("Email: ");
+                    String email = sc.nextLine();
+
+                   
+                    if (!email.matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$")) {
+                        System.out.println("Error: Email must be a valid @gmail.com address!");
+                        break; 
+                    }
+
+                    System.out.print("Password: ");
+                    String pwd = sc.nextLine();
+
+                    
+                    if (!pwd.matches("^(?=.*[A-Za-z])(?=(?:.*\\d){3,}).+$")) {
+                        System.out.println("Error: Password must contain at least 3 numbers and alphabets!");
+                        break; 
+                    }
+
+                    System.out.print("Role (BUYER/SELLER): ");
+                    String role = sc.nextLine();
+
+                    if (userService.register(name, email, pwd, role.toUpperCase()))
+                        System.out.println("Registered Successfully!");
+                    else
+                        System.out.println("Registration Failed!");
+                    break;
+
+               
+ 
 
                     case 2:
                         System.out.print("Email: ");

@@ -1,0 +1,103 @@
+package com.revshop.service;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.revshop.dao.cartDAO;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.CartItem;
+
+@ExtendWith(MockitoExtension.class)
+public class CartServiceTest {
+
+    @Mock
+    private cartDAO cartDAO;
+
+    @Mock
+    private ProductDAO productDAO;
+
+    @Mock
+    private NotificationService notificationService;
+
+    @InjectMocks
+    private CartService cartService;
+
+    @BeforeEach
+    void setup() {
+        // Mockito will auto inject mocks
+    }
+
+    // ================= TEST ADD TO CART SUCCESS =================
+    @Test
+    void testAddProductWithStockCheck_Success() {
+        when(productDAO.getAvailableStock(1)).thenReturn(10);
+
+        boolean result = cartService.addProductWithStockCheck(101, 1, 2);
+
+        assertTrue(result);
+        verify(cartDAO).addToCart(101, 1, 2);
+    }
+
+    // ================= TEST OUT OF STOCK =================
+    @Test
+    void testAddProductWithStockCheck_OutOfStock() {
+        when(productDAO.getAvailableStock(1)).thenReturn(0);
+
+        boolean result = cartService.addProductWithStockCheck(101, 1, 2);
+
+        assertFalse(result);
+        verify(cartDAO, never()).addToCart(anyInt(), anyInt(), anyInt());
+    }
+
+    // ================= TEST INSUFFICIENT STOCK =================
+    @Test
+    void testAddProductWithStockCheck_InsufficientStock() {
+        when(productDAO.getAvailableStock(1)).thenReturn(1);
+
+        boolean result = cartService.addProductWithStockCheck(101, 1, 5);
+
+        assertFalse(result);
+        verify(cartDAO, never()).addToCart(anyInt(), anyInt(), anyInt());
+    }
+
+    // ================= TEST REMOVE PRODUCT =================
+    @Test
+    void testRemoveProduct() {
+        cartService.removeProduct(101, 1);
+
+        verify(cartDAO).removeFromCart(101, 1);
+    }
+
+    // ================= TEST VIEW CART =================
+    @Test
+    void testViewCart() throws Exception {
+        Connection mockCon = mock(Connection.class);
+
+        List<CartItem> items = new ArrayList<>();
+        CartItem item = new CartItem();
+        item.setProductId(1);
+        item.setQuantity(2);
+        items.add(item);
+
+        when(cartDAO.getCartItems(eq(101), any())).thenReturn(items);
+
+        // Spy to mock private method getProductPrice
+        CartService spyService = spy(cartService);
+        doReturn(100.0).when(spyService).getProductPrice(eq(1), any());
+
+        spyService.viewCart(101);
+
+        verify(cartDAO).getCartItems(eq(101), any());
+    }
+}

@@ -1,0 +1,28 @@
+package com.revshop.service;
+
+import java.sql.SQLException;
+import com.revshop.dao.ProductDAO;
+
+public class ProductService {
+
+    private ProductDAO productDAO;
+
+    public ProductService() {
+        this.productDAO = new ProductDAO();
+    }
+
+    // Seller: view only their products
+    public void viewAllProducts(int sellerId) throws SQLException {
+        productDAO.viewProductsBySeller(sellerId);
+    }
+
+    // Buyer: view all products
+    public void viewAllProducts() throws SQLException {
+        productDAO.viewAllProducts();
+    }
+
+    // Buyer: search products
+    public void searchProducts(String keyword) throws SQLException {
+        productDAO.searchByKeyword(keyword);
+    }
+}

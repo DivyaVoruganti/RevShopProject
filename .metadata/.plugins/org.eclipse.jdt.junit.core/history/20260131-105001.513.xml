@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="SellerServiceTest" project="Revproject" tests="7" started="7" failures="0" errors="0" ignored="0">
+  <testsuite name="com.revshop.service.SellerServiceTest" time="0.021">
+    <testcase name="testAddProduct_DiscountGreaterThanMRP" classname="com.revshop.service.SellerServiceTest" time="0.014"/>
+    <testcase name="testUpdateProduct_DiscountGreaterThanMRP" classname="com.revshop.service.SellerServiceTest" time="0.001"/>
+    <testcase name="testUpdateProduct_Success" classname="com.revshop.service.SellerServiceTest" time="0.002"/>
+    <testcase name="testDeleteProduct_Success" classname="com.revshop.service.SellerServiceTest" time="0.001"/>
+    <testcase name="testViewSellerProducts" classname="com.revshop.service.SellerServiceTest" time="0.001"/>
+    <testcase name="testAddProduct_NonSeller" classname="com.revshop.service.SellerServiceTest" time="0.001"/>
+    <testcase name="testAddProduct_Success" classname="com.revshop.service.SellerServiceTest" time="0.001"/>
+  </testsuite>
+</testrun>

@@ -1,0 +1,177 @@
+package com.revshop.service;
+import java.util.Scanner;
+import java.sql.SQLException;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.Product;
+import com.revshop.service.UserService;
+
+public class SellerService {
+
+    private ProductDAO productDAO = new ProductDAO();
+    private UserService userService = new UserService();
+    public void addProduct(
+            String name,
+            double mrp,
+            double discountPrice,
+            int stock,
+            String category,
+            String description,
+            int sellerId
+    ) {
+        if (!checkIfSeller(sellerId)) {
+            System.out.println("Error: Only sellers can add products.");
+            return;
+        }
+
+        if (discountPrice > mrp) {
+            System.out.println("Error: Discount price cannot be greater than MRP.");
+            return;
+        }
+
+        Product product = new Product();
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+        product.setSellerId(sellerId);
+
+        try {
+            productDAO.addProduct(product);  
+            System.out.println("Product added successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error adding product! Please check database constraints.");
+            e.printStackTrace();
+        }
+        
+    }
+
+    private boolean checkIfSeller(int userId) {
+        String role = userService.getRoleByUserId(userId);
+        return "seller".equalsIgnoreCase(role);
+    }
+
+   
+//    public void addProduct(
+//            String name,
+//            double mrp,
+//            double discountPrice,
+//            int stock,
+//            String category,
+//            String description,
+//            int sellerId
+//    ) throws SQLException {
+//
+//       
+//        if (discountPrice > mrp) {
+//            System.out.println(" Discount price cannot be greater than MRP");
+//            return;
+//        }
+//
+//        Product product = new Product();
+//        product.setName(name);
+//        product.setMrp(mrp);
+//        product.setDiscountPrice(discountPrice);
+//        product.setStock(stock);
+//        product.setCategory(category);
+//        product.setDescription(description);
+//        product.setSellerId(sellerId);
+//
+//                productDAO.addProduct(product);
+//    }
+
+   
+    public void viewSellerProducts(int sellerId) throws SQLException {
+        productDAO.getProductsBySeller(sellerId);
+    }
+
+   
+    public void updateProduct(
+            int productId,
+            int sellerId,
+            String name,
+            double mrp,
+            double discountPrice,
+            int stock,
+            String category,
+            String description
+    ) throws SQLException {
+
+        if (discountPrice > mrp) {
+            System.out.println("Discount price cannot be greater than MRP");
+            return;
+        }
+
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setSellerId(sellerId);
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+
+        productDAO.updateProduct(product);
+    }
+    public void updatePrice(int sellerId) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.print("Enter Product ID to update price: ");
+            int productId = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Enter New MRP: ");
+            double newMrp = Double.parseDouble(sc.nextLine());
+
+            System.out.print("Enter New Discount Price: ");
+            double newDiscount = Double.parseDouble(sc.nextLine());
+
+            
+            if (newDiscount > newMrp) {
+                System.out.println("Discount price cannot be greater than MRP");
+                return;
+            }
+
+           
+            Product product = new Product();
+            product.setProductId(productId);
+            product.setSellerId(sellerId);
+            product.setMrp(newMrp);
+            product.setDiscountPrice(newDiscount);
+
+            
+            productDAO.updateProductPrice(product);
+
+            System.out.println("Price updated successfully!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Enter numeric values for MRP and Discount Price.");
+        } catch (SQLException e) {
+            System.out.println("Error updating price!");
+            e.printStackTrace();
+        }
+    }
+    public void viewProductReviews(int sellerId) {
+        productDAO.viewProductReviewsBySeller(sellerId);
+    }
+    public void setInventoryThreshold(int sellerId) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Product ID: ");
+        int productId = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Enter Stock Threshold Value: ");
+        int threshold = Integer.parseInt(sc.nextLine());
+
+        productDAO.updateStockThreshold(productId, sellerId, threshold);
+    }
+
+    public void checkLowStockAlerts(int sellerId) {
+        productDAO.checkLowStock(sellerId);
+    }
+
+    public void deleteProduct(int productId, int sellerId) throws SQLException {
+        productDAO.deleteProduct(productId, sellerId); // Fixed method name
+    }
+}

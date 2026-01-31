@@ -1,0 +1,215 @@
+package com.revshop.dao;
+
+import com.revshop.model.Product;
+import java.sql.*;
+import com.revshop.util.DBConnection;
+public class ProductDAO {
+	public void viewAllProducts() throws SQLException {
+	    Connection con = DBConnection.getConnection();
+	    String sql = "SELECT product_id, name, price, stock, category FROM products";
+	    PreparedStatement ps = con.prepareStatement(sql);
+	    ResultSet rs = ps.executeQuery();
+
+	    System.out.println("ID | Name | Price | Stock | Category");
+	    while (rs.next()) {
+	        System.out.println(
+	            rs.getInt("product_id") + " | " +
+	            rs.getString("name") + " | " +
+	            rs.getDouble("price") + " | " +
+	            rs.getInt("stock") + " | " +
+	            rs.getString("category")
+	        );
+	    }
+
+	    rs.close();
+	    ps.close();
+	    con.close();
+	}
+	public void searchByKeyword(String keyword) throws SQLException {
+	    Connection con = DBConnection.getConnection();
+	    String sql =
+	        "SELECT product_id, name, price, stock, category " +
+	        "FROM products " +
+	        "WHERE LOWER(name) LIKE ? OR LOWER(category) LIKE ?";
+
+	    PreparedStatement ps = con.prepareStatement(sql);
+	    String value = "%" + keyword.toLowerCase() + "%";
+	    ps.setString(1, value);
+	    ps.setString(2, value);
+
+	    ResultSet rs = ps.executeQuery();
+
+	    System.out.println("ID | Name | Price | Stock | Category");
+	    while (rs.next()) {
+	        System.out.println(
+	            rs.getInt("product_id") + " | " +
+	            rs.getString("name") + " | " +
+	            rs.getDouble("price") + " | " +
+	            rs.getInt("stock") + " | " +
+	            rs.getString("category")
+	        );
+	    }
+
+	    rs.close();
+	    ps.close();
+	    con.close();
+	}
+
+	public void addProduct(String name, double price, int stock,
+            String category, String description, int sellerId) throws SQLException {
+
+         Connection con = DBConnection.getConnection();
+
+           String sql =
+            "INSERT INTO products " +
+            "(product_id, name, price, stock, category, description, seller_id) " +
+           "VALUES (product_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+              ps.setString(1, name);
+               ps.setDouble(2, price);
+               ps.setInt(3, stock);
+               ps.setString(4, category);
+               ps.setString(5, description);
+               ps.setInt(6, sellerId);
+
+              ps.executeUpdate();
+          System.out.println("Product added successfully!");
+
+          ps.close();
+          con.close();
+}
+
+//	public void viewOrdersBySeller(int sellerId) throws SQLException {
+//
+//	    Connection con = DBConnection.getConnection();
+//
+//	    String sql =
+//	        "SELECT o.order_id, o.order_date, p.name, oi.quantity, oi.price " +
+//	        "FROM orders o " +
+//	        "JOIN order_items oi ON o.order_id = oi.order_id " +
+//	        "JOIN products p ON oi.product_id = p.product_id " +
+//	        "WHERE p.seller_id = ? " +
+//	        "ORDER BY o.order_id";
+//
+//	    PreparedStatement ps = con.prepareStatement(sql);
+//	    ps.setInt(1, sellerId);
+//
+//	    ResultSet rs = ps.executeQuery();
+//
+//	    System.out.println("OrderID | Date | Product | Qty | Price");
+//
+//	    boolean found = false;
+//	    while (rs.next()) {
+//	        found = true;
+//	        System.out.println(
+//	            rs.getInt("order_id") + " | " +
+//	            rs.getDate("order_date") + " | " +
+//	            rs.getString("name") + " | " +
+//	            rs.getInt("quantity") + " | " +
+//	            rs.getDouble("price")
+//	        );
+//	    }
+//
+//	    if (!found) {
+//	        System.out.println("No orders found for your products.");
+//	    }
+//
+//	    rs.close();
+//	    ps.close();
+//	    con.close();
+//	}
+
+    public void viewProductsBySeller(int sellerId) {
+
+        String sql = "SELECT * FROM products WHERE seller_id = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+
+        try {con = DBConnection.getConnection();
+             ps = con.prepareStatement(sql); 
+
+            ps.setInt(1, sellerId);
+             rs = ps.executeQuery();
+
+            System.out.println("ID | Name | Price | Stock | Category");
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+    }
+        }
+        
+    // UPDATE PRODUCT
+    public void updateProduct(Product product) {
+
+        String sql = "UPDATE products SET name=?, price=?, stock=?, category=?, description=? "
+                   + "WHERE product_id=? AND seller_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+
+
+        try {con = DBConnection.getConnection();
+              ps = con.prepareStatement(sql);
+
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setInt(3, product.getStock());
+            ps.setString(4, product.getCategory());
+            ps.setString(5, product.getDescription());
+            ps.setInt(6, product.getProductId());
+            ps.setInt(7, product.getSellerId());
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product updated!" : "Update failed!");
+        
+        } catch (SQLException e) {   
+        e.printStackTrace();
+        } finally {
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+    }
+    }
+    
+    
+
+    // DELETE PRODUCT
+    public void deleteProduct(int productId, int sellerId) {
+
+        String sql = "DELETE FROM products WHERE product_id=? AND seller_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {con = DBConnection.getConnection();
+              ps = con.prepareStatement(sql); 
+
+            ps.setInt(1, productId);
+            ps.setInt(2, sellerId);
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product deleted!" : "Delete failed!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+    }
+
+    }
+    
+}

@@ -1,0 +1,79 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.ReviewDAO;
+
+public class ReviewServiceTest {
+
+    @Mock
+    private ReviewDAO dao;  // Mocked DAO
+
+    @InjectMocks
+    private ReviewService reviewService;  // Mockito will inject the mock here
+
+    @Before
+    public void setUp() {
+        // Initialize mocks and inject them
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testReviewProduct_Success() throws SQLException {
+        int userId = 1;
+
+        // Simulate user input: productId, rating, comment
+        String input = "101\n5\nExcellent product\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        // Mock DAO behavior
+        when(dao.hasPurchased(userId, 101)).thenReturn(true);
+
+        // Call the method under test
+        reviewService.reviewProduct(userId);
+
+        // Verify DAO interactions
+        verify(dao).hasPurchased(userId, 101);
+        verify(dao).addReview(userId, 101, 5, "Excellent product");
+    }
+
+    @Test
+    public void testReviewProduct_NotPurchased() throws SQLException {
+        int userId = 2;
+
+        // Simulate user input: productId
+        String input = "202\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        // Mock DAO behavior
+        when(dao.hasPurchased(userId, 202)).thenReturn(false);
+
+        // Call the method under test
+        reviewService.reviewProduct(userId);
+
+        
+        verify(dao, never()).addReview(anyInt(), anyInt(), anyInt(), anyString());
+    }
+
+    @Test
+    public void testViewReviews() throws SQLException {
+        
+        String input = "303\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        
+        reviewService.viewReviews();
+
+        
+        verify(dao).viewProductReviews(303);
+    }
+}

@@ -1,0 +1,40 @@
+//package com.revshop.service;
+//import java.sql.SQLException;
+//import com.revshop.dao.NotificationDAO;
+//public class NotificationService {
+//	 private NotificationDAO dao = new NotificationDAO();
+//
+//	    public void notifyOrderPlaced(int userId) throws SQLException {
+//	        dao.addNotification(userId, "Your order has been placed successfully!");
+//	    }
+//
+//	    public void showNotifications(int userId) throws SQLException {
+//	        dao.viewNotifications(userId);
+//	    }
+//
+//}
+package com.revshop.service;
+
+import com.revshop.dao.NotificationDAO;
+import java.sql.SQLException;
+
+public class NotificationService {
+
+    private NotificationDAO notificationDAO = new NotificationDAO();
+
+    public void notifySeller(int sellerId, String message) throws SQLException {
+        notificationDAO.addNotification(sellerId, "SELLER", message);
+    }
+
+    public void notifyBuyer(int buyerId, String message) throws SQLException {
+        notificationDAO.addNotification(buyerId, "BUYER", message);
+    }
+
+    public void viewSellerNotifications(int sellerId) throws SQLException {
+        notificationDAO.viewNotifications(sellerId, "SELLER");
+    }
+
+    public void viewBuyerNotifications(int buyerId) throws SQLException {
+        notificationDAO.viewNotifications(buyerId, "BUYER");
+    }
+}

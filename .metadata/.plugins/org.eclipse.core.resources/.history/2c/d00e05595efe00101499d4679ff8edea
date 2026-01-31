@@ -1,0 +1,28 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.FavoriteDAO;
+
+public class FavoriteServiceTest {
+
+    @Mock
+    private FavoriteDAO dao;
+
+    @InjectMocks
+    private FavoritesService favoritesService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+}

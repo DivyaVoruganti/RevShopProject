@@ -1,0 +1,190 @@
+package com.revshop.dao;
+
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+
+import java.sql.*;
+
+public class ProductDAO {
+
+    /* ================= VIEW ALL PRODUCTS ================= */
+    public void viewAllProducts() throws SQLException {
+
+        String sql =
+            "SELECT product_id, name, price, discount_price, stock, category " +
+            "FROM products";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+        }
+    }
+
+    /* ================= SEARCH ================= */
+    public void searchByKeyword(String keyword) throws SQLException {
+
+        String sql =
+            "SELECT product_id, name, price, discount_price, stock, category " +
+            "FROM products " +
+            "WHERE LOWER(name) LIKE ? OR LOWER(category) LIKE ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String value = "%" + keyword.toLowerCase() + "%";
+            ps.setString(1, value);
+            ps.setString(2, value);
+
+            ResultSet rs = ps.executeQuery();
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+        }
+    }
+
+    /* ================= ADD PRODUCT ================= */
+    public void addProduct(String name,
+                           double mrp,
+                           double discountPrice,
+                           int stock,
+                           String category,
+                           String description,
+                           int sellerId) throws SQLException {
+
+        String sql =
+            "INSERT INTO products " +
+            "(product_id, name, price, discount_price, stock, category, description, seller_id) " +
+            "VALUES (product_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+            ps.setDouble(2, mrp);
+            ps.setDouble(3, discountPrice);
+            ps.setInt(4, stock);
+            ps.setString(5, category);
+            ps.setString(6, description);
+            ps.setInt(7, sellerId);
+
+            ps.executeUpdate();
+            System.out.println("Product added successfully!");
+        }
+    }
+
+    /* ================= VIEW PRODUCTS BY SELLER ================= */
+    public void viewProductsBySeller(int sellerId) {
+
+        String sql =
+            "SELECT product_id, name, price, discount_price, stock, category " +
+            "FROM products WHERE seller_id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, sellerId);
+            ResultSet rs = ps.executeQuery();
+
+            System.out.println("ID | Name | MRP | Discount | Stock | Category");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt("product_id") + " | " +
+                    rs.getString("name") + " | " +
+                    rs.getDouble("price") + " | " +
+                    rs.getDouble("discount_price") + " | " +
+                    rs.getInt("stock") + " | " +
+                    rs.getString("category")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* ================= UPDATE PRODUCT ================= */
+    public void updateProduct(Product product) {
+
+        String sql =
+            "UPDATE products SET " +
+            "name=?, price=?, discount_price=?, stock=?, category=?, description=? " +
+            "WHERE product_id=? AND seller_id=?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());          // MRP
+            ps.setDouble(3, product.getDiscountPrice()); // Discount
+            ps.setInt(4, product.getStock());
+            ps.setString(5, product.getCategory());
+            ps.setString(6, product.getDescription());
+            ps.setInt(7, product.getProductId());
+            ps.setInt(8, product.getSellerId());
+
+            int rows = ps.executeUpdate();
+            System.out.println(rows > 0 ? "Product updated!" : "Update failed!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* ================= DELETE PRODUCT ================= */
+    public void deleteProduct(int productId, int sellerId) {
+
+        String checkSql =
+            "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
+
+        String deleteSql =
+            "DELETE FROM products WHERE product_id = ? AND seller_id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+
+            checkPs.setInt(1, productId);
+            ResultSet rs = checkPs.executeQuery();
+            rs.next();
+
+            if (rs.getInt(1) > 0) {
+                System.out.println("Cannot delete product. Orders exist.");
+                return;
+            }
+
+            try (PreparedStatement deletePs = con.prepareStatement(deleteSql)) {
+                deletePs.setInt(1, productId);
+                deletePs.setInt(2, sellerId);
+
+                int rows = deletePs.executeUpdate();
+                System.out.println(rows > 0 ? "Product deleted!" : "Delete failed!");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

@@ -1,0 +1,71 @@
+package com.revshop.service;
+
+import java.sql.SQLException;
+
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.Product;
+
+public class SellerService {
+
+    private ProductDAO productDAO = new ProductDAO();
+    public void sellerMenu(int sellerId) {}
+
+    /* ================= ADD PRODUCT ================= */
+    public void addProduct(
+            String name,
+            double mrp,
+            double discountPrice,
+            int stock,
+            String category,
+            String description,
+            int sellerId) throws SQLException {
+
+        Product product = new Product();
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+        product.setSellerId(sellerId);
+
+        productDAO.addProduct(product);
+        System.out.println("Product added successfully!");
+    }
+
+    /* ================= VIEW SELLER PRODUCTS ================= */
+    public void viewSellerProducts(int sellerId) {
+        productDAO.viewProductsBySeller(sellerId);
+    }
+
+    /* ================= UPDATE PRODUCT ================= */
+    public void updateProduct(
+            int productId,
+            int sellerId,
+            String name,
+            double mrp,
+            double discountPrice,
+            int stock,
+            String category,
+            String description) {
+
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setSellerId(sellerId);
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+
+        productDAO.updateProduct(product);
+        System.out.println("Product updated successfully!");
+    }
+
+    /* ================= DELETE PRODUCT ================= */
+    public void deleteProduct(int productId, int sellerId) {
+        productDAO.deleteProduct(productId, sellerId);
+        System.out.println("Product deleted successfully!");
+    }
+}

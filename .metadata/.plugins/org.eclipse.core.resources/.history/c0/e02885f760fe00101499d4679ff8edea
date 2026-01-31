@@ -1,0 +1,51 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.FavoriteDAO;
+
+public class FavoriteServiceTest {
+
+    @Mock
+    private FavoriteDAO dao;
+
+    @InjectMocks
+    private FavoritesService favoritesService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+    
+    @Test
+    public void testAddToFavorites() throws SQLException {
+
+        String input = "1\n101\n4\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        favoritesService.favoritesMenu(1);
+
+        verify(dao).addToFavorites(1, 101);
+    }
+    @Test
+    public void testViewFavorites() throws SQLException {
+
+        String input = "2\n4\n"; 
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        favoritesService.favoritesMenu(1);
+
+        verify(dao).viewFavorites(1);
+    }
+   
+}

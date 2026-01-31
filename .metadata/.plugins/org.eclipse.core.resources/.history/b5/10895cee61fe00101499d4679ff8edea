@@ -1,0 +1,39 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.PaymentDAO;
+
+public class PaymentServiceTest {
+
+    @Mock
+    private PaymentDAO dao;
+
+    @InjectMocks
+    private PaymentService paymentService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+    @Test
+    public void testMakePayment_NoOrders() throws SQLException {
+
+        when(dao.getLatestOrderId(1)).thenReturn(0);
+
+        paymentService.makePayment(1);
+
+        verify(dao).getLatestOrderId(1);
+        verify(dao, never()).updatePayment(anyInt(), anyString());
+    }
+}

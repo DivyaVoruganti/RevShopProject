@@ -1,0 +1,93 @@
+package com.revshop.dao;
+
+import java.sql.*;
+import com.revshop.model.Product;
+import com.revshop.util.DBConnection;
+
+public class SellerDAO {
+	 public void viewProducts(int sellerId) throws SQLException {
+	        Connection con = DBConnection.getConnection();
+	        String sql = "SELECT product_id, name, price, stock, category, description FROM products";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setInt(1,sellerId);
+	        ResultSet rs = ps.executeQuery();
+
+	        System.out.println("ID | Name | Price | Stock | Category | Description");
+	        while(rs.next()) {
+	            System.out.println(
+	                rs.getInt("product_id") + " | " +
+	                rs.getString("name") + " | " +
+	                rs.getDouble("price") + " | " +
+	                rs.getInt("stock") + " | " +
+	                rs.getString("category") + " | " +
+	                rs.getString("description")
+	            );
+	        }
+
+	        rs.close();
+	        ps.close();
+	        con.close();
+	    }
+
+	   
+	    public void addProduct(Product p) throws SQLException {
+	        Connection con = DBConnection.getConnection();
+	        String sql = "INSERT INTO products (seller_id,name, price, stock, category, description) VALUES (?, ?, ?, ?, ?)";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setInt(1, p.getSellerId());
+	        ps.setString(2, p.getName());
+	        ps.setDouble(3, p.getPrice());
+	        ps.setInt(4, p.getStock());
+	        ps.setString(5, p.getCategory());
+	        ps.setString(6, p.getDescription());
+	        ps.executeUpdate();
+	        System.out.println("Product added successfully!");
+	        ps.close();
+	        con.close();
+	    }
+
+	   
+	    public void updateProduct(Product p) throws SQLException {
+	        Connection con = DBConnection.getConnection();
+	        String sql = "UPDATE products SET name=?, price=?, stock=?, category=?, description=? WHERE p_id=?";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setString(1, p.getName());
+	        ps.setDouble(2, p.getPrice());
+	        ps.setInt(3, p.getStock());
+	        ps.setString(4, p.getCategory());
+	        ps.setString(5, p.getDescription());
+	        ps.setInt(6, p.getId());
+
+	        int rows = ps.executeUpdate();
+	        if(rows > 0)
+	            System.out.println("Product updated successfully!");
+	        else
+	            System.out.println("Product ID not found!");
+
+	        ps.close();
+	        con.close();
+	    }
+	    public void deleteProduct(int productId, int sellerId) throws SQLException {
+
+	        String sql = "DELETE FROM products WHERE product_id = ? AND seller_id = ?";
+
+	        Connection con = DBConnection.getConnection();   
+	        PreparedStatement ps = con.prepareStatement(sql); 
+
+	        ps.setInt(1, productId);
+	        ps.setInt(2, sellerId);
+
+	        int rows = ps.executeUpdate();
+
+	        if (rows > 0)
+	            System.out.println("Product deleted successfully!");
+	        else
+	            System.out.println("Product ID not found or not owned by you!");
+
+	        ps.close();
+	        con.close();
+	    }
+
+
+	   
+}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="27" version="2.0">
+<workbench progressCount="28" version="2.0">
 <workbenchAdvisor/>
-<window height="1028" width="976" x="-8" y="0">
+<window height="1028" width="976" x="952" y="0">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -59,6 +59,21 @@
 <part id="27"/>
 <part id="28"/>
 <part id="29"/>
+<part id="30"/>
+<part id="31"/>
+<part id="32"/>
+<part id="33"/>
+<part id="34"/>
+<part id="35"/>
+<part id="36"/>
+<part id="37"/>
+<part id="38"/>
+<part id="39"/>
+<part id="40"/>
+<part id="41"/>
+<part id="42"/>
+<part id="43"/>
+<part id="44"/>
 </presentation>
 </folder>
 </info>
@@ -73,11 +88,11 @@
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ProductDAO.java" partName="ProductDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/ProductDAO.java" title="ProductDAO.java" tooltip="Revproject/src/com/revshop/dao/ProductDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/ProductDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="114" selectionTopPixel="488"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="102" selectionTopPixel="0"/>
 </editor>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="RevShopApp.java" partName="RevShopApp.java" path="C:/eclipse/Revproject/src/com/revshop/main/RevShopApp.java" title="RevShopApp.java" tooltip="Revproject/src/com/revshop/main/RevShopApp.java" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="RevShopApp.java" partName="RevShopApp.java" path="C:/eclipse/Revproject/src/com/revshop/main/RevShopApp.java" title="RevShopApp.java" tooltip="Revproject/src/com/revshop/main/RevShopApp.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/main/RevShopApp.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9964" selectionTopPixel="4646"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4118" selectionTopPixel="1583"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Review.java" partName="Review.java" path="C:/eclipse/Revproject/src/com/revshop/model/Review.java" title="Review.java" tooltip="Revproject/src/com/revshop/model/Review.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/Review.java"/>
@@ -89,23 +104,23 @@
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderItem.java" partName="OrderItem.java" path="C:/eclipse/Revproject/src/com/revshop/model/OrderItem.java" title="OrderItem.java" tooltip="Revproject/src/com/revshop/model/OrderItem.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/OrderItem.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1756" selectionTopPixel="931"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="532" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Seller.java" partName="Seller.java" path="C:/eclipse/Revproject/src/com/revshop/model/Seller.java" title="Seller.java" tooltip="Revproject/src/com/revshop/model/Seller.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/Seller.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1290" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="844" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="UserDAO.java" partName="UserDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/UserDAO.java" title="UserDAO.java" tooltip="Revproject/src/com/revshop/dao/UserDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/UserDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3034" selectionTopPixel="191"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3384" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="UserService.java" partName="UserService.java" path="C:/eclipse/Revproject/src/com/revshop/service/UserService.java" title="UserService.java" tooltip="Revproject/src/com/revshop/service/UserService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/UserService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1080" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="934" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ProductService.java" partName="ProductService.java" path="C:/eclipse/Revproject/src/com/revshop/service/ProductService.java" title="ProductService.java" tooltip="Revproject/src/com/revshop/service/ProductService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/ProductService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="101" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="253" selectionTopPixel="113"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Cart.java" partName="Cart.java" path="C:/eclipse/Revproject/src/com/revshop/model/Cart.java" title="Cart.java" tooltip="Revproject/src/com/revshop/model/Cart.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/Cart.java"/>
@@ -113,27 +128,27 @@
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="cartDAO.java" partName="cartDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/cartDAO.java" title="cartDAO.java" tooltip="Revproject/src/com/revshop/dao/cartDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/cartDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2494" selectionTopPixel="1480"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6084" selectionTopPixel="3573"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CartService.java" partName="CartService.java" path="C:/eclipse/Revproject/src/com/revshop/service/CartService.java" title="CartService.java" tooltip="Revproject/src/com/revshop/service/CartService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/CartService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="472" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="851" selectionTopPixel="239"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoriteDAO.java" partName="FavoriteDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/FavoriteDAO.java" title="FavoriteDAO.java" tooltip="Revproject/src/com/revshop/dao/FavoriteDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/FavoriteDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="97" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="563" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Product.java" partName="Product.java" path="C:/eclipse/Revproject/src/com/revshop/model/Product.java" title="Product.java" tooltip="Revproject/src/com/revshop/model/Product.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/Product.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="105" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="261" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoritesService.java" partName="FavoritesService.java" path="C:/eclipse/Revproject/src/com/revshop/service/FavoritesService.java" title="FavoritesService.java" tooltip="Revproject/src/com/revshop/service/FavoritesService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/FavoritesService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="204" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1166" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CheckoutService.java" partName="CheckoutService.java" path="C:/eclipse/Revproject/src/com/revshop/service/CheckoutService.java" title="CheckoutService.java" tooltip="Revproject/src/com/revshop/service/CheckoutService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/CheckoutService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1127" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1223" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Order.java" partName="Order.java" path="C:/eclipse/Revproject/src/com/revshop/model/Order.java" title="Order.java" tooltip="Revproject/src/com/revshop/model/Order.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/Order.java"/>
@@ -145,19 +160,19 @@
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NotificationDAO.java" partName="NotificationDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/NotificationDAO.java" title="NotificationDAO.java" tooltip="Revproject/src/com/revshop/dao/NotificationDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/NotificationDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1314" selectionTopPixel="39"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1139" selectionTopPixel="599"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NotificationService.java" partName="NotificationService.java" path="C:/eclipse/Revproject/src/com/revshop/service/NotificationService.java" title="NotificationService.java" tooltip="Revproject/src/com/revshop/service/NotificationService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/NotificationService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="483" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1166" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderDAO.java" partName="OrderDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/OrderDAO.java" title="OrderDAO.java" tooltip="Revproject/src/com/revshop/dao/OrderDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/OrderDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="813" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="44" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderService.java" partName="OrderService.java" path="C:/eclipse/Revproject/src/com/revshop/service/OrderService.java" title="OrderService.java" tooltip="Revproject/src/com/revshop/service/OrderService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/OrderService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="172" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="568" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ReviewDAO.java" partName="ReviewDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/ReviewDAO.java" title="ReviewDAO.java" tooltip="Revproject/src/com/revshop/dao/ReviewDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/ReviewDAO.java"/>
@@ -165,33 +180,91 @@
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ReviewService.java" partName="ReviewService.java" path="C:/eclipse/Revproject/src/com/revshop/service/ReviewService.java" title="ReviewService.java" tooltip="Revproject/src/com/revshop/service/ReviewService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/ReviewService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="683" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="549" selectionTopPixel="233"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentDAO.java" partName="PaymentDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/PaymentDAO.java" title="PaymentDAO.java" tooltip="Revproject/src/com/revshop/dao/PaymentDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/PaymentDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="549" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="549" selectionTopPixel="61"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentService.java" partName="PaymentService.java" path="C:/eclipse/Revproject/src/com/revshop/service/PaymentService.java" title="PaymentService.java" tooltip="Revproject/src/com/revshop/service/PaymentService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/PaymentService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="198" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="489" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SellerDAO.java" partName="SellerDAO.java" path="C:/eclipse/Revproject/src/com/revshop/dao/SellerDAO.java" title="SellerDAO.java" tooltip="Revproject/src/com/revshop/dao/SellerDAO.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/dao/SellerDAO.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2806" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2367" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SellerService.java" partName="SellerService.java" path="C:/eclipse/Revproject/src/com/revshop/service/SellerService.java" title="SellerService.java" tooltip="Revproject/src/com/revshop/service/SellerService.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/service/SellerService.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5547" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9714" selectionTopPixel="4784"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="DBConnection.java" partName="DBConnection.java" path="C:/eclipse/Revproject/src/com/revshop/util/DBConnection.java" title="DBConnection.java" tooltip="Revproject/src/com/revshop/util/DBConnection.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/util/DBConnection.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CartItem.java" partName="CartItem.java" path="C:/eclipse/Revproject/src/com/revshop/model/CartItem.java" title="CartItem.java" tooltip="Revproject/src/com/revshop/model/CartItem.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/CartItem.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="29" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="User.java" partName="User.java" path="C:/eclipse/Revproject/src/com/revshop/model/User.java" title="User.java" tooltip="Revproject/src/com/revshop/model/User.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/src/com/revshop/model/User.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="cartDAOTest.java" partName="cartDAOTest.java" path="C:/eclipse/Revproject/test/com/revshop/dao/cartDAOTest.java" title="cartDAOTest.java" tooltip="Revproject/test/com/revshop/dao/cartDAOTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/dao/cartDAOTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="73" selectionOffset="172" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoriteDAOTest.java" partName="FavoriteDAOTest.java" path="C:/eclipse/Revproject/test/com/revshop/dao/FavoriteDAOTest.java" title="FavoriteDAOTest.java" tooltip="Revproject/test/com/revshop/dao/FavoriteDAOTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/dao/FavoriteDAOTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="59" selectionTopPixel="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CartServiceTest.java" partName="CartServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/CartServiceTest.java" title="CartServiceTest.java" tooltip="Revproject/test/com/revshop/service/CartServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/CartServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="171" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CheckoutServiceTest.java" partName="CheckoutServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/CheckoutServiceTest.java" title="CheckoutServiceTest.java" tooltip="Revproject/test/com/revshop/service/CheckoutServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/CheckoutServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="235" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoriteServiceTest.java" partName="FavoriteServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/FavoriteServiceTest.java" title="FavoriteServiceTest.java" tooltip="Revproject/test/com/revshop/service/FavoriteServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/FavoriteServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="324" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NotificationServiceTest.java" partName="NotificationServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/NotificationServiceTest.java" title="NotificationServiceTest.java" tooltip="Revproject/test/com/revshop/service/NotificationServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/NotificationServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="345" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderServiceTest.java" partName="OrderServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/OrderServiceTest.java" title="OrderServiceTest.java" tooltip="Revproject/test/com/revshop/service/OrderServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/OrderServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="376" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentServiceTest.java" partName="PaymentServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/PaymentServiceTest.java" title="PaymentServiceTest.java" tooltip="Revproject/test/com/revshop/service/PaymentServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/PaymentServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="317" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ProductServiceTest.java" partName="ProductServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/ProductServiceTest.java" title="ProductServiceTest.java" tooltip="Revproject/test/com/revshop/service/ProductServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/ProductServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="124" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ReviewServiceTest.java" partName="ReviewServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/ReviewServiceTest.java" title="ReviewServiceTest.java" tooltip="Revproject/test/com/revshop/service/ReviewServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/ReviewServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="313" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SellerServiceTest.java" partName="SellerServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/SellerServiceTest.java" title="SellerServiceTest.java" tooltip="Revproject/test/com/revshop/service/SellerServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/SellerServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="397" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="UserServiceTest.java" partName="UserServiceTest.java" path="C:/eclipse/Revproject/test/com/revshop/service/UserServiceTest.java" title="UserServiceTest.java" tooltip="Revproject/test/com/revshop/service/UserServiceTest.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/Revproject/test/com/revshop/service/UserServiceTest.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="574" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
+<view id="org.eclipse.jdt.junit.ResultView" partName="JUnit">
+<viewState failuresOnly="false" layout="1" orientation="2" ratio="500" scroll="false" time="true"/>
+</view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
-<expanded>
-<category IMemento.internal.id="Warnings (32 items)"/>
-<category IMemento.internal.id="Warnings"/>
-<category IMemento.internal.id="Errors"/>
-</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="120" org.eclipse.ui.ide.markerType="120" org.eclipse.ui.ide.pathField="160" org.eclipse.ui.ide.resourceField="120" org.eclipse.ui.ide.severityAndDescriptionField="400"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -202,9 +275,7 @@
 </view>
 <view id="org.eclipse.jdt.ui.PackageExplorer" partName="Package Explorer">
 <viewState group_libraries="1" layout="2" linkWithEditor="0" rootMode="1" workingSetName="">
-<customFilters userDefinedPatternsEnabled="false">
-<xmlDefinedFilters>
-<child filterId="org.eclipse.jdt.ui.PackageExplorer.LibraryFilter" isEnabled="false"/>
+<customFilters userDefinedPatternsEnabled="false">&#x0A;<xmlDefinedFilters>&#x0A;<child filterId="org.eclipse.jdt.ui.PackageExplorer.LibraryFilter" isEnabled="false"/>
 <child filterId="org.eclipse.jdt.ui.PackageExplorer.LocalTypesFilter" isEnabled="false"/>
 <child filterId="org.eclipse.jdt.ui.PackageExplorer.StaticsFilter" isEnabled="false"/>
 <child filterId="org.eclipse.jdt.ui.PackageExplorer.ClosedProjectsFilter" isEnabled="false"/>
@@ -296,29 +367,34 @@
 <hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <fastViewBars>
-<fastViewBar fastViewLocation="1024" id="bottom" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="1">
+<fastViewBar fastViewLocation="1024" id="bottom" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
 <fastViews>
 <view id="org.eclipse.ui.views.ProblemView" ratio="0.3"/>
 <view id="org.eclipse.jdt.ui.JavadocView" ratio="0.3"/>
 <view id="org.eclipse.jdt.ui.SourceView" ratio="0.3"/>
-<view id="org.eclipse.ui.console.ConsoleView" ratio="0.6535433"/>
+</fastViews>
+</fastViewBar>
+<fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@175a166" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="1">
+<fastViews>
+<view id="org.eclipse.ui.console.ConsoleView" ratio="0.3"/>
 </fastViews>
 </fastViewBar>
 <fastViewBar fastViewLocation="16384" id="left" orientation="512" selectedTabId="org.eclipse.jdt.ui.PackageExplorer" style="1">
 <fastViews>
-<view id="org.eclipse.jdt.ui.PackageExplorer" ratio="0.2990249"/>
+<view id="org.eclipse.jdt.ui.PackageExplorer" ratio="0.3"/>
+<view id="org.eclipse.jdt.junit.ResultView" ratio="0.4"/>
 </fastViews>
 </fastViewBar>
 </fastViewBars>
 <layout>
 <mainWindow>
 <info folder="true" part="left">
-<folder appearance="2" expanded="0">
+<folder appearance="2" expanded="2">
 <page content="org.eclipse.jdt.ui.PackageExplorer" label="LabelNotFound"/>
+<page content="org.eclipse.jdt.junit.ResultView" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.TypeHierarchy" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 <page content="org.eclipse.ui.navigator.ProjectExplorer" label="LabelNotFound"/>
-<page content="org.eclipse.jdt.junit.ResultView" label="LabelNotFound"/>
 <page content="org.eclipse.wb.core.StructureView" label="LabelNotFound"/>
 <page content="org.eclipse.wb.core.PaletteView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
@@ -332,13 +408,12 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info part="org.eclipse.ui.editorss" ratio="0.249499" ratioLeft="249" ratioRight="749" relationship="2" relative="left"/>
-<info folder="true" part="bottom" ratio="0.5188335" ratioLeft="427" ratioRight="396" relationship="4" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="0">
+<info part="org.eclipse.ui.editorss" ratio="0.19434258" ratioLeft="371" ratioRight="1538" relationship="2" relative="left"/>
+<info folder="true" part="bottom" ratio="0.8113839" ratioLeft="727" ratioRight="169" relationship="4" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.JavadocView" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.SourceView" label="LabelNotFound"/>
-<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
 <page content="org.eclipse.search.ui.views.SearchView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
@@ -359,6 +434,12 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@175a166" ratio="0.67633927" ratioLeft="606" ratioRight="290" relationship="4" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
 </mainWindow>
 </layout>
 </perspective>
@@ -367,160 +448,164 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/main/RevShopApp.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/model/Product.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/dao/SellerDAO.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/service/SellerService.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/service/CartService.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/service/PaymentService.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/service/ProductService.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/service/SellerService.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/test/com/revshop/service/CartServiceTest.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/service/ReviewService.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/dao/cartDAO.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/Revproject/src/com/revshop/dao/ProductDAO.java"/>
 </editors>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="1067" y="0"/>
+<item historyLabel="PaymentService.java" index="2">
+<position info="not_deleted" x="489" y="0"/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="463" y="0"/>
+<item historyLabel="ProductService.java" index="3">
+<position info="not_deleted" x="253" y="0"/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="463" y="0"/>
+<item historyLabel="ReviewService.java" index="6">
+<position info="not_deleted" x="549" y="0"/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="342" y="0"/>
+<item historyLabel="SellerService.java" index="4">
+<position/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="463" y="0"/>
+<item historyLabel="cartDAO.java" index="7">
+<position/>
 </item>
-<item historyLabel="Product.java" index="1">
-<position info="not_deleted" x="1346" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="463" y="0"/>
+<item historyLabel="cartDAO.java" index="7">
+<position/>
+</item>
+<item historyLabel="CartServiceTest.java" index="5">
+<position/>
+</item>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="290" y="0"/>
+</item>
+<item historyLabel="cartDAO.java" index="7">
+<position info="not_deleted" x="6084" y="0"/>
 </item>
 <item historyLabel="RevShopApp.java" index="0">
 <position/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="1006" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="342" y="0"/>
+<item historyLabel="ProductDAO.java" index="8">
+<position info="not_deleted" x="10181" y="0"/>
+</item>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="6702" y="0"/>
 </item>
 <item historyLabel="RevShopApp.java" index="0">
 <position/>
 </item>
-<item historyLabel="RevShopApp.java" index="0">
+<item historyLabel="SellerService.java" index="4">
+<position/>
+</item>
+<item historyLabel="CartServiceTest.java" index="5">
+<position info="not_deleted" x="171" y="0"/>
+</item>
+<item historyLabel="CartService.java" index="1">
 <position/>
 </item>
 <item historyLabel="RevShopApp.java" index="0">
+<position info="not_deleted" x="8158" y="0"/>
+</item>
+<item historyLabel="SellerService.java" index="4">
 <position/>
 </item>
-<item historyLabel="Product.java" index="1">
-<position info="not_deleted" x="300" y="0"/>
+<item historyLabel="CartServiceTest.java" index="5">
+<position info="not_deleted" x="171" y="0"/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="190" y="50"/>
-</item>
-<item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="757" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
+<item historyLabel="SellerService.java" index="4">
 <position/>
 </item>
+<item historyLabel="SellerService.java" index="4">
+<position/>
+</item>
+<item historyLabel="SellerService.java" index="4">
+<position/>
+</item>
+<item historyLabel="ProductDAO.java" index="8">
+<position info="not_deleted" x="378" y="0"/>
+</item>
 <item historyLabel="RevShopApp.java" index="0">
 <position/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="3278" y="0"/>
+<item historyLabel="SellerService.java" index="4">
+<position info="not_deleted" x="9838" y="0"/>
 </item>
 <item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="9295" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="4770" y="0"/>
-</item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="982" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="4770" y="0"/>
-</item>
-<item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="9295" y="0"/>
-</item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="1006" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="4770" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="3219" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="3549" y="0"/>
-</item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="970" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="3549" y="0"/>
-</item>
-<item historyLabel="Product.java" index="1">
-<position info="not_deleted" x="300" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="3549" y="0"/>
-</item>
-<item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="763" y="0"/>
-</item>
-<item historyLabel="SellerDAO.java" index="2">
 <position/>
 </item>
-<item historyLabel="SellerService.java" index="3">
+<item historyLabel="CartServiceTest.java" index="5">
+<position info="not_deleted" x="171" y="0"/>
+</item>
+<item historyLabel="SellerService.java" index="4">
 <position/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="2806" y="0"/>
+<item historyLabel="ProductDAO.java" index="8">
+<position info="not_deleted" x="153" y="0"/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="5547" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position/>
+</item>
+<item historyLabel="SellerService.java" index="4">
+<position/>
+</item>
+<item historyLabel="CartServiceTest.java" index="5">
+<position info="not_deleted" x="182" y="0"/>
+</item>
+<item historyLabel="SellerService.java" index="4">
+<position info="not_deleted" x="10248" y="0"/>
+</item>
+<item historyLabel="CartServiceTest.java" index="5">
+<position info="not_deleted" x="182" y="0"/>
+</item>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="1028" y="0"/>
+</item>
+<item historyLabel="ProductDAO.java" index="8">
+<position info="not_deleted" x="153" y="0"/>
 </item>
 <item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="9272" y="0"/>
+<position info="not_deleted" x="431" y="0"/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="5547" y="0"/>
-</item>
-<item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="9272" y="0"/>
-</item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="5547" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="1060" y="0"/>
 </item>
 <item historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="10452" y="0"/>
+<position/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="5547" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="1170" y="0"/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="2806" y="0"/>
+<item historyLabel="ProductDAO.java" index="8">
+<position info="not_deleted" x="102" y="0"/>
 </item>
-<item historyLabel="Product.java" index="1">
-<position info="not_deleted" x="300" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="6419" y="0"/>
 </item>
-<item historyLabel="SellerService.java" index="3">
-<position info="not_deleted" x="5547" y="0"/>
+<item historyLabel="RevShopApp.java" index="0">
+<position/>
 </item>
-<item historyLabel="SellerDAO.java" index="2">
-<position info="not_deleted" x="2806" y="0"/>
+<item historyLabel="CartService.java" index="1">
+<position info="not_deleted" x="851" y="0"/>
 </item>
-<item historyLabel="PaymentService.java" index="4">
-<position info="not_deleted" x="198" y="0"/>
+<item historyLabel="RevShopApp.java" index="0">
+<position info="not_deleted" x="9929" y="0"/>
 </item>
-<item historyLabel="Product.java" index="1">
-<position info="not_deleted" x="105" y="0"/>
+<item historyLabel="SellerService.java" index="4">
+<position info="not_deleted" x="9714" y="0"/>
 </item>
-<item active="true" historyLabel="RevShopApp.java" index="0">
-<position info="not_deleted" x="10452" y="0"/>
+<item historyLabel="RevShopApp.java" index="0">
+<position info="not_deleted" x="4118" y="0"/>
+</item>
+<item active="true" historyLabel="CartServiceTest.java" index="5">
+<position info="not_deleted" x="182" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -540,54 +625,55 @@
 <trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
 <trimItem IMemento.internal.id="bottom"/>
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.ViewStack@175a166"/>
 </trimArea>
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SellerService.java" tooltip="Revproject/src/com/revshop/service/SellerService.java">
-<persistable path="/Revproject/src/com/revshop/service/SellerService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="UserServiceTest.java" tooltip="Revproject/test/com/revshop/service/UserServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/UserServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SellerDAO.java" tooltip="Revproject/src/com/revshop/dao/SellerDAO.java">
-<persistable path="/Revproject/src/com/revshop/dao/SellerDAO.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SellerServiceTest.java" tooltip="Revproject/test/com/revshop/service/SellerServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/SellerServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentService.java" tooltip="Revproject/src/com/revshop/service/PaymentService.java">
-<persistable path="/Revproject/src/com/revshop/service/PaymentService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ReviewServiceTest.java" tooltip="Revproject/test/com/revshop/service/ReviewServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/ReviewServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentDAO.java" tooltip="Revproject/src/com/revshop/dao/PaymentDAO.java">
-<persistable path="/Revproject/src/com/revshop/dao/PaymentDAO.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ProductServiceTest.java" tooltip="Revproject/test/com/revshop/service/ProductServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/ProductServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ReviewService.java" tooltip="Revproject/src/com/revshop/service/ReviewService.java">
-<persistable path="/Revproject/src/com/revshop/service/ReviewService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentServiceTest.java" tooltip="Revproject/test/com/revshop/service/PaymentServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/PaymentServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ReviewDAO.java" tooltip="Revproject/src/com/revshop/dao/ReviewDAO.java">
-<persistable path="/Revproject/src/com/revshop/dao/ReviewDAO.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="PaymentService.java" tooltip="Revproject/test/com/revshop/service/PaymentService.java">
+<persistable path="/Revproject/test/com/revshop/service/PaymentService.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderService.java" tooltip="Revproject/src/com/revshop/service/OrderService.java">
-<persistable path="/Revproject/src/com/revshop/service/OrderService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderServiceTest.java" tooltip="Revproject/test/com/revshop/service/OrderServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/OrderServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="OrderDAO.java" tooltip="Revproject/src/com/revshop/dao/OrderDAO.java">
-<persistable path="/Revproject/src/com/revshop/dao/OrderDAO.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NotificationServiceTest.java" tooltip="Revproject/test/com/revshop/service/NotificationServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/NotificationServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NotificationService.java" tooltip="Revproject/src/com/revshop/service/NotificationService.java">
-<persistable path="/Revproject/src/com/revshop/service/NotificationService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoriteServiceTest.java" tooltip="Revproject/test/com/revshop/service/FavoriteServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/FavoriteServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NotificationDAO.java" tooltip="Revproject/src/com/revshop/dao/NotificationDAO.java">
-<persistable path="/Revproject/src/com/revshop/dao/NotificationDAO.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CheckoutServiceTest.java" tooltip="Revproject/test/com/revshop/service/CheckoutServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/CheckoutServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Notification.java" tooltip="Revproject/src/com/revshop/model/Notification.java">
-<persistable path="/Revproject/src/com/revshop/model/Notification.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CheckoutService.java" tooltip="Revproject/test/com/revshop/service/CheckoutService.java">
+<persistable path="/Revproject/test/com/revshop/service/CheckoutService.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Order.java" tooltip="Revproject/src/com/revshop/model/Order.java">
-<persistable path="/Revproject/src/com/revshop/model/Order.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CartServiceTest.java" tooltip="Revproject/test/com/revshop/service/CartServiceTest.java">
+<persistable path="/Revproject/test/com/revshop/service/CartServiceTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CheckoutService.java" tooltip="Revproject/src/com/revshop/service/CheckoutService.java">
-<persistable path="/Revproject/src/com/revshop/service/CheckoutService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoriteDAOTest.java" tooltip="Revproject/test/com/revshop/dao/FavoriteDAOTest.java">
+<persistable path="/Revproject/test/com/revshop/dao/FavoriteDAOTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FavoritesService.java" tooltip="Revproject/src/com/revshop/service/FavoritesService.java">
-<persistable path="/Revproject/src/com/revshop/service/FavoritesService.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="cartDAOTest.java" tooltip="Revproject/test/com/revshop/dao/cartDAOTest.java">
+<persistable path="/Revproject/test/com/revshop/dao/cartDAOTest.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Product.java" tooltip="Revproject/src/com/revshop/model/Product.java">
-<persistable path="/Revproject/src/com/revshop/model/Product.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="User.java" tooltip="Revproject/src/com/revshop/model/User.java">
+<persistable path="/Revproject/src/com/revshop/model/User.java"/>
 </file>
 </mruList>
 </workbench>

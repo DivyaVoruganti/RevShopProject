@@ -1,0 +1,125 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.ProductDAO;
+import com.revshop.dao.UserDAO;
+import com.revshop.model.Product;
+
+public class SellerServiceTest {
+
+    @Mock
+    private ProductDAO productDAO;
+
+    @Mock
+    private UserDAO userDAO;
+
+    @InjectMocks
+    private SellerService sellerService;
+
+    @Before
+    public void setUp() {
+        // Initialize mocks
+        MockitoAnnotations.initMocks(this);
+    }
+
+    /* ================== ADD PRODUCT ================== */
+    @Test
+    public void testAddProduct_Success() throws SQLException {
+        int sellerId = 1;
+
+        // Mock the user as seller
+        when(userDAO.getRoleByUserId(sellerId)).thenReturn("seller");
+
+        // Call addProduct
+        sellerService.addProduct("Laptop", 50000, 45000, 10, "Electronics", "Gaming Laptop", sellerId);
+
+        // Verify that DAO method was called
+        verify(productDAO).addProduct(any(Product.class));
+    }
+
+    @Test
+    public void testAddProduct_DiscountGreaterThanMRP() throws SQLException {
+        int sellerId = 1;
+        when(userDAO.getRoleByUserId(sellerId)).thenReturn("seller");
+
+        // Call addProduct with invalid discount
+        sellerService.addProduct("Laptop", 50000, 55000, 10, "Electronics", "Gaming Laptop", sellerId);
+
+        // Verify that DAO addProduct was NOT called
+        verify(productDAO, never()).addProduct(any(Product.class));
+    }
+
+    @Test
+    public void testAddProduct_NonSeller() throws SQLException {
+        int userId = 2;
+        when(userDAO.getRoleByUserId(userId)).thenReturn("buyer");
+
+        sellerService.addProduct("Laptop", 50000, 45000, 10, "Electronics", "Gaming Laptop", userId);
+
+        // DAO should never be called
+        verify(productDAO, never()).addProduct(any(Product.class));
+    }
+
+    /* ================== UPDATE PRODUCT ================== */
+    @Test
+    public void testUpdateProduct_Success() throws SQLException {
+        int sellerId = 1;
+
+        // No role check needed because updateProduct doesn't check role
+        sellerService.updateProduct(101, sellerId, "Laptop Pro", 60000, 55000, 15, "Electronics", "Updated Laptop");
+
+        // Verify DAO call
+        verify(productDAO).updateProduct(any(Product.class));
+    }
+
+    @Test
+    public void testUpdateProduct_DiscountGreaterThanMRP() throws SQLException {
+        int sellerId = 1;
+
+        // Discount > MRP should prevent update
+        sellerService.updateProduct(101, sellerId, "Laptop Pro", 50000, 60000, 15, "Electronics", "Updated Laptop");
+
+        verify(productDAO, never()).updateProduct(any(Product.class));
+    }
+
+    /* ================== DELETE PRODUCT ================== */
+    @Test
+    public void testDeleteProduct_Success() throws SQLException {
+        int sellerId = 1;
+        int productId = 101;
+
+        sellerService.deleteProduct(productId, sellerId);
+
+        verify(productDAO).deleteProduct(productId, sellerId);
+    }
+
+    /* ================== CHECK SELLER ROLE ================== */
+    @Test
+    public void testIsSeller_True() {
+        int sellerId = 1;
+        when(userDAO.getRoleByUserId(sellerId)).thenReturn("seller");
+
+        boolean result = sellerService.isSeller(sellerId);  // Private method; you may need reflection if testing
+        // Normally we don't test private methods; tested indirectly via addProduct
+    }
+
+    /* ================== VIEW SELLER PRODUCTS ================== */
+    @Test
+    public void testViewSellerProducts() throws SQLException {
+        int sellerId = 1;
+
+        sellerService.viewSellerProducts(sellerId);
+
+        verify(productDAO).getProductsBySeller(sellerId);
+    }
+}

@@ -1,0 +1,65 @@
+package com.revshop.service;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.revshop.dao.PaymentDAO;
+
+public class PaymentServiceTest {
+
+    @Mock
+    private PaymentDAO dao;
+
+    @InjectMocks
+    private PaymentService paymentService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+    @Test
+    public void testMakePayment_NoOrders() throws SQLException {
+
+        when(dao.getLatestOrderId(1)).thenReturn(0);
+
+        paymentService.makePayment(1);
+
+        verify(dao).getLatestOrderId(1);
+        verify(dao, never()).updatePayment(anyInt(), anyString());
+    }
+    @Test
+    public void testMakePayment_Card() throws SQLException {
+
+        when(dao.getLatestOrderId(1)).thenReturn(1001);
+
+        String input = "1\n1234567890123456\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        paymentService.makePayment(1);
+
+        verify(dao).updatePayment(1001, "CARD");
+    }
+    @Test
+    public void testMakePayment_UPI() throws SQLException {
+
+        when(dao.getLatestOrderId(1)).thenReturn(2002);
+
+        String input = "2\ntest@upi\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        paymentService.makePayment(1);
+
+        verify(dao).updatePayment(2002, "UPI");
+    }
+
+
+}

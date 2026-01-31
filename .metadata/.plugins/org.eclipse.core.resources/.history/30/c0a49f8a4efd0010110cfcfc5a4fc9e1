@@ -1,0 +1,49 @@
+package com.revshop.service;
+import java.sql.ResultSet;
+
+import com.revshop.dao.UserDAO;
+
+public class UserService {
+
+    UserDAO userDAO = new UserDAO();
+
+    public boolean register(String name, String email, String password, String role ) {
+        return userDAO.register(name, email, password, role);
+    }
+
+//    public boolean login(String email, String password) {
+//        return userDAO.login(email, password);
+//    }
+
+    public boolean changePassword(String email, String newPwd) {
+        return userDAO.changePassword(email, newPwd);
+    }
+        public String login(String email, String password) {
+            return userDAO.loginAndGetRole(email, password);
+        }
+        public int loginAndGetUserId(String email, String password) {
+            try {
+                ResultSet rs = userDAO.loginAndGetUser(email, password);
+                if (rs != null && rs.next()) {
+                    return rs.getInt("user_id");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return -1;
+        }
+
+        public String loginAndGetRole(String email, String password) {
+            try {
+                ResultSet rs = userDAO.loginAndGetUser(email, password);
+                if (rs != null && rs.next()) {
+                    return rs.getString("role");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    
+}

@@ -13,7 +13,7 @@ public class SellerService {
     private UserService userService = new UserService();
     private UserDAO userDAO = new UserDAO();
 
-    /* =================== ADD PRODUCT =================== */
+   
     public void addProduct(String name, double mrp, double discountPrice,
                            int stock, String category, String description, int sellerId) {
 
@@ -44,7 +44,7 @@ public class SellerService {
         }
     }
 
-    /* =================== CHECK SELLER ROLE =================== */
+  
     private boolean isSeller(int userId) {
         String role = userDAO.getRoleByUserId(userId);
         return "seller".equalsIgnoreCase(role);
@@ -55,7 +55,7 @@ public class SellerService {
         return "seller".equalsIgnoreCase(role);
     }
 
-    /* =================== VIEW SELLER PRODUCTS =================== */
+    
     public void viewSellerProducts(int sellerId) {
         try {
             productDAO.getProductsBySeller(sellerId);
@@ -64,7 +64,7 @@ public class SellerService {
         }
     }
 
-    /* =================== UPDATE PRODUCT =================== */
+    
     public void updateProduct(int productId, int sellerId, String name, double mrp,
                               double discountPrice, int stock, String category, String description) {
 
@@ -91,7 +91,7 @@ public class SellerService {
         }
     }
 
-    /* =================== UPDATE PRICE =================== */
+    
     public void updatePrice(int sellerId) {
         Scanner sc = new Scanner(System.in);
         try {
@@ -127,7 +127,7 @@ public class SellerService {
         }
     }
 
-    /* =================== VIEW PRODUCT REVIEWS =================== */
+    
     public void viewProductReviews(int sellerId) {
         try {
             productDAO.viewProductReviewsBySeller(sellerId);
@@ -136,7 +136,7 @@ public class SellerService {
         }
     }
 
-    /* =================== SET INVENTORY THRESHOLD =================== */
+    
     public void setInventoryThreshold(int sellerId) {
         Scanner sc = new Scanner(System.in);
         try {
@@ -158,7 +158,7 @@ public class SellerService {
         }
     }
 
-    /* =================== CHECK LOW STOCK ALERTS =================== */
+    
     public void checkLowStockAlerts(int sellerId) {
         try {
             productDAO.checkLowStock(sellerId);
@@ -167,7 +167,7 @@ public class SellerService {
         }
     }
 
-    /* =================== DELETE PRODUCT =================== */
+   
     public void deleteProduct(int productId, int sellerId) {
         try {
             productDAO.deleteProduct(productId, sellerId);
@@ -177,7 +177,7 @@ public class SellerService {
         }
     }
 
-    /* =================== SELLER MENU =================== */
+   
     public void sellerMenu(int sellerId, Scanner sc) {
         while (true) {
             System.out.println("\n===== SELLER MENU =====");
@@ -257,7 +257,7 @@ public class SellerService {
                     break;
                 case 9:
                     System.out.println("Logging out of seller menu...");
-                    return; // logout
+                    return; 
                 default:
                     System.out.println("Invalid choice!");
             }

@@ -1,0 +1,80 @@
+package com.revshop.service;
+
+import java.sql.SQLException;
+import com.revshop.dao.ProductDAO;
+import com.revshop.model.Product;
+
+public class SellerService {
+
+    private ProductDAO productDAO = new ProductDAO();
+
+    /* ================= ADD PRODUCT ================= */
+    public void addProduct(
+            String name,
+            double mrp,
+            double discountPrice,
+            int stock,
+            String category,
+            String description,
+            int sellerId
+    ) throws SQLException {
+
+        // Validation
+        if (discountPrice > mrp) {
+            System.out.println(" Discount price cannot be greater than MRP");
+            return;
+        }
+
+        Product product = new Product();
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+        product.setSellerId(sellerId);
+
+        // Call DAO method that accepts Product object
+        productDAO.addProduct(product);
+    }
+
+    /* ================= VIEW SELLER PRODUCTS ================= */
+    public void viewSellerProducts(int sellerId) throws SQLException {
+        productDAO.getProductsBySeller(sellerId); // Fixed method name
+    }
+
+    /* ================= UPDATE PRODUCT ================= */
+    public void updateProduct(
+            int productId,
+            int sellerId,
+            String name,
+            double mrp,
+            double discountPrice,
+            int stock,
+            String category,
+            String description
+    ) throws SQLException {
+
+        if (discountPrice > mrp) {
+            System.out.println("Discount price cannot be greater than MRP");
+            return;
+        }
+
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setSellerId(sellerId);
+        product.setName(name);
+        product.setMrp(mrp);
+        product.setDiscountPrice(discountPrice);
+        product.setStock(stock);
+        product.setCategory(category);
+        product.setDescription(description);
+
+        productDAO.updateProduct(product);
+    }
+
+    /* ================= DELETE PRODUCT ================= */
+    public void deleteProduct(int productId, int sellerId) throws SQLException {
+        productDAO.removeProduct(productId, sellerId); // Fixed method name
+    }
+}

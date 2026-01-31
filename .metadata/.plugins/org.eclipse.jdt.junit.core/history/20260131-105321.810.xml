@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="UserServiceTest" project="Revproject" tests="6" started="6" failures="0" errors="0" ignored="0">
+  <testsuite name="com.revshop.service.UserServiceTest" time="0.014">
+    <testcase name="testChangePassword_Success" classname="com.revshop.service.UserServiceTest" time="0.009"/>
+    <testcase name="testChangePassword_Failure" classname="com.revshop.service.UserServiceTest" time="0.001"/>
+    <testcase name="testLogin_Failure" classname="com.revshop.service.UserServiceTest" time="0.001"/>
+    <testcase name="testRegister_Failure" classname="com.revshop.service.UserServiceTest" time="0.001"/>
+    <testcase name="testLogin_Success" classname="com.revshop.service.UserServiceTest" time="0.001"/>
+    <testcase name="testRegister_Success" classname="com.revshop.service.UserServiceTest" time="0.001"/>
+  </testsuite>
+</testrun>

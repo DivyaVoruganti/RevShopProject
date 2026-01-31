@@ -6,5 +6,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/ojdbc14.jar.zip"/>
 	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/ojdbc6.jar.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/hamcrest-core-1.3.jar.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/cglib-nodep-2.2.2.jar.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/objenesis-1.3.jar.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/log4j-1.2.17.jar.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Divya/Downloads/mockito-core-1.10.19.jar.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
